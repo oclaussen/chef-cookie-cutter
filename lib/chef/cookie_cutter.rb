@@ -16,18 +16,26 @@
 #
 require 'chef/recipe'
 require 'chef/resource'
+require 'chef/resource/lwrp_base'
 require 'chef/provider'
+require 'chef/provider/lwrp_base'
 
 class Chef
   module CookieCutter
+    require_relative 'cookie_cutter/fancy_property'
     require_relative 'cookie_cutter/lwrp_include'
+    require_relative 'cookie_cutter/monkey_patches'
     require_relative 'cookie_cutter/namespace'
     require_relative 'cookie_cutter/run_state'
     require_relative 'cookie_cutter/shared_blocks'
-    require_relative 'cookie_cutter/fancy_property'
   end
 end
 
+# Register Monkey Patches
+Chef::Resource::LWRPBase.send(:prepend, Chef::CookieCutter::MonkeyPatches::LWRPResource)
+Chef::Provider::LWRPBase.send(:prepend, Chef::CookieCutter::MonkeyPatches::LWRPProvider)
+
+# Register DSL
 Chef::Recipe.send(:include, Chef::CookieCutter::DSL)
 Chef::Resource.send(:include, Chef::CookieCutter::DSL)
 Chef::Provider.send(:include, Chef::CookieCutter::DSL)
