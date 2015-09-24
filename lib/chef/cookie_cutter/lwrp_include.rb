@@ -20,12 +20,15 @@ class Chef
     module LWRPInclude
       module_function
 
-      def build_resource_module_from_file(node, cookbook, segment, name)
-        cookbook_version = node.run_context.cookbook_collection[cookbook]
-        vendor = ::Chef::Cookbook::FileVendor.create_from_manifest(cookbook_version.manifest)
-        manifest_record = cookbook_version.preferred_manifest_record(node, segment.to_s, name)
-        filename = vendor.get_filename(manifest_record[:path])
+      def filename_for_record(run_context, cookbook_name, segment, name)
+        name += '.rb' unless name.end_with?('.rb')
+        cookbook_version = run_context.cookbook_collection[cookbook_name]
+        file_vendor = ::Chef::Cookbook::FileVendor.create_from_manifest(cookbook_version.manifest)
+        manifest_record = cookbook_version.preferred_manifest_record(run_context.node, segment.to_s, name)
+        file_vendor.get_filename(manifest_record[:path])
+      end
 
+      def build_resource_module_from_file(filename)
         fail IOError, "Cannot open or read #{filename}" unless File.exist?(filename) && File.readable?(filename)
 
         resource_module = Module.new
@@ -38,15 +41,23 @@ class Chef
     end
 
     module ResourceDSL
-      def lwrp_include(name, cookbook:)
-        include ::Chef::CookieCutter::LWRPInclude.build_resource_module_from_file(node, cookbook, :resources, name)
+      def lwrp_include(name, cookbook: nil)
+        util_class = ::Chef::CookieCutter::LWRPInclude
+        cookbook = lwrp_cookbook_name if cookbook.nil?
+        context = lwrp_run_context
+        filename = util_class.filename_for_record(context, cookbook, :resources, name)
+        include util_class.build_resource_module_from_file(filename)
       end
     end
-    # TODO: doesn't work
-    # module ProviderDSL
-    #   def lwrp_include(name, cookbook: 'dotfiles')
-    #     include ::Chef::CookieCutter::LWRPInclude.build_resource_module_from_file(node, cookbook, :providers, name)
-    #   end
-    # end
+
+    module ProviderDSL
+      def lwrp_include(name, cookbook: nil)
+        util_class = ::Chef::CookieCutter::LWRPInclude
+        cookbook = lwrp_cookbook_name if cookbook.nil?
+        context = lwrp_run_context
+        filename = util_class.filename_for_record(context, cookbook, :providers, name)
+        include util_class.build_resource_module_from_file(filename)
+      end
+    end
   end
 end
