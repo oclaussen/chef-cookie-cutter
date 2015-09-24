@@ -22,7 +22,14 @@ require 'chef/provider/lwrp_base'
 
 class Chef
   module CookieCutter
-    require_relative 'cookie_cutter/fancy_property'
+    def self.chef_version(version)
+      ::Gem::Requirement.new(version).satisfied_by?(::Gem::Version.new(::Chef::VERSION))
+    end
+
+    if chef_version('~> 12.5.0.alpha')
+      require_relative 'cookie_cutter/fancy_property'
+    end
+
     require_relative 'cookie_cutter/lwrp_include'
     require_relative 'cookie_cutter/monkey_patches'
     require_relative 'cookie_cutter/namespace'
