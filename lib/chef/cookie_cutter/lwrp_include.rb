@@ -20,6 +20,11 @@ class Chef
     module LWRPInclude
       module_function
 
+      def try_file(filename)
+        return if File.exist?(filename) && File.readable?(filename)
+        fail IOError, "Cannot open or read #{filename}"
+      end
+
       def filename_for_record(run_context, cookbook_name, segment, name)
         name += '.rb' unless name.end_with?('.rb')
         cookbook_version = run_context.cookbook_collection[cookbook_name]
@@ -29,8 +34,7 @@ class Chef
       end
 
       def build_resource_module_from_file(filename)
-        fail IOError, "Cannot open or read #{filename}" unless File.exist?(filename) && File.readable?(filename)
-
+        try_file(filename)
         resource_module = Module.new
         resource_module.instance_variable_set('@filename', filename)
         def resource_module.included(cls)

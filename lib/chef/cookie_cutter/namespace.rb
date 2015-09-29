@@ -45,15 +45,31 @@ EOH
 
     module AttributeDSL
       def namespace(*args, **kwargs, &blk)
-        @namespace_options ||= { precedence: default }
-        @namespace_options = @namespace_options.merge(kwargs)
+        @namespace_options = namespace_options.merge(kwargs)
         keys = args.map(&:to_s)
-        @current_namespace ||= []
-        @current_namespace += keys
+        @current_namespace = current_namespace + keys
         instance_eval(&blk) if block_given?
-        @current_namespace -= keys
+        @current_namespace = current_namespace - keys
         @namespace_options = nil if @current_namespace.empty?
         nil
+      end
+
+      private
+
+      def namespace_options
+        @namespace_options ||= { precedence: default }
+      end
+
+      def current_namespace
+        @current_namespace ||= []
+      end
+
+      def vivified
+        precedence = namespace_options[:precedence]
+        current_namespace.inject(precedence) do |hash, item|
+          hash[item] ||= {}
+          hash[item]
+        end
       end
     end
 
@@ -70,16 +86,10 @@ EOH
         def method_missing(method_name, *args)
           super
         rescue NoMethodError
-          @current_namespace ||= []
-          @namespace_options ||= { precedence: default }
           if args.empty?
-            deep_key = @current_namespace.dup << method_name.to_s
+            deep_key = current_namespace.dup << method_name.to_s
             return ::Chef::CookieCutter::Namespace.deep_fetch!(attributes, deep_key)
           else
-            vivified = @current_namespace.inject(@namespace_options[:precedence]) do |hash, item|
-              hash[item] ||= {}
-              hash[item]
-            end
             vivified[method_name.to_s] = args.size == 1 ? args.first : args
             return nil
           end

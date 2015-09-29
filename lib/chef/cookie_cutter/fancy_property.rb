@@ -44,19 +44,27 @@ class Chef
 
       def coerce(resource, *args, **kwargs, &blk)
         if options.key?(:coerce_class)
-          value = options[:coerce_class].new(*args, **kwargs)
-          value.instance_eval(&blk) if block_given?
-          value
+          coerce_class(options[:coerce_class], *args, **kwargs, &blk)
         elsif options.key?(:coerce)
-          value = resource.instance_exec(*args, **kwargs, &options[:coerce]) unless resource.nil?
-          value.instance_eval(&blk) if block_given?
-          value = coerce(resource, value) if value.is_a?(DelayedEvaluator)
-          value
+          coerce_proc(resource, options[:coerce], *args, **kwargs, &blk)
         elsif args.length == 1 && kwargs.empty?
           args[0]
         else
           fail Chef::Exceptions::ValidationFailed, "No coercion given for arguments #{args}, #{kwargs}"
         end
+      end
+
+      def coerce_class(clazz, *args, **kwargs, &blk)
+        value = clazz.new(*args, **kwargs)
+        value.instance_eval(&blk) if block_given?
+        value
+      end
+
+      def coerce_proc(resource, coerce, *args, **kwargs, &blk)
+        value = resource.instance_exec(*args, **kwargs, &coerce) unless resource.nil?
+        value.instance_eval(&blk) if block_given?
+        value = coerce(resource, value) if value.is_a?(DelayedEvaluator)
+        value
       end
 
       def emit_dsl

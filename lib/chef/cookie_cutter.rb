@@ -22,8 +22,9 @@ require 'chef/provider/lwrp_base'
 
 class Chef
   module CookieCutter
-    def self.chef_version(version)
-      ::Gem::Requirement.new(version).satisfied_by?(::Gem::Version.new(::Chef::VERSION))
+    def self.chef_version(constraint)
+      gem_version = ::Gem::Version.new(::Chef::VERSION)
+      ::Gem::Requirement.new(constraint).satisfied_by?(gem_version)
     end
 
     if chef_version('~> 12.5.0.alpha')
@@ -38,15 +39,17 @@ class Chef
   end
 end
 
+CC = Chef::CookieCutter
+
 # Register Monkey Patches
-Chef::Node.send(:prepend, Chef::CookieCutter::MonkeyPatches::Node)
-Chef::Resource::LWRPBase.send(:prepend, Chef::CookieCutter::MonkeyPatches::LWRPResource)
-Chef::Provider::LWRPBase.send(:prepend, Chef::CookieCutter::MonkeyPatches::LWRPProvider)
+Chef::Node.send :prepend, CC::MonkeyPatches::Node
+Chef::Resource::LWRPBase.send :prepend, CC::MonkeyPatches::LWRPResource
+Chef::Provider::LWRPBase.send :prepend, CC::MonkeyPatches::LWRPProvider
 
 # Register DSL
-Chef::Recipe.send(:include, Chef::CookieCutter::DSL)
-Chef::Resource.send(:include, Chef::CookieCutter::DSL)
-Chef::Provider.send(:include, Chef::CookieCutter::DSL)
-Chef::Node.send(:include, Chef::CookieCutter::AttributeDSL)
-Chef::Resource::LWRPBase.send(:extend, Chef::CookieCutter::ResourceDSL)
-Chef::Provider::LWRPBase.send(:extend, Chef::CookieCutter::ProviderDSL)
+Chef::Recipe.send :include, CC::DSL
+Chef::Resource.send :include, CC::DSL
+Chef::Provider.send :include, CC::DSL
+Chef::Node.send :include, CC::AttributeDSL
+Chef::Resource::LWRPBase.send :extend, CC::ResourceDSL
+Chef::Provider::LWRPBase.send :extend, CC::ProviderDSL

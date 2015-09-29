@@ -2,21 +2,10 @@ AllCops:
   DisplayCopNames: true
   DisplayStyleGuide: true
 
-Metrics/LineLength:
-  Max: 120
-Metrics/MethodLength:
-  Enabled: false
-Metrics/ClassLength:
-  Enabled: false
-
-Style/LeadingCommentSpace:
-  Enabled: false
 Style/Documentation:
   Enabled: false
 
+Metrics/LineLength:
+  Max: 110
 Metrics/AbcSize:
-  Enabled: false
-Metrics/CyclomaticComplexity:
-  Enabled: false
-Metrics/PerceivedComplexity:
-  Enabled: false
+  Max: 20
