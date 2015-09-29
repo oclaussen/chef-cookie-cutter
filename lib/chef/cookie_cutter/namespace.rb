@@ -43,6 +43,20 @@ EOH
       end
     end
 
+    module AttributeDSL
+      def namespace(*args, **kwargs, &blk)
+        @namespace_options ||= { precedence: default }
+        @namespace_options = @namespace_options.merge(kwargs)
+        keys = args.map(&:to_s)
+        @current_namespace ||= []
+        @current_namespace += keys
+        instance_eval(&blk) if block_given?
+        @current_namespace -= keys
+        @namespace_options = nil if @current_namespace.empty?
+        nil
+      end
+    end
+
     module DSL
       def namespace(*args)
         keys = args.map(&:to_s)
@@ -50,36 +64,26 @@ EOH
         yield attribute if block_given?
       end
     end
-  end
 
-  class Node
-    def namespace(*args, **kwargs, &blk)
-      @namespace_options ||= { precedence: default }
-      @namespace_options = @namespace_options.merge(kwargs)
-      keys = args.map(&:to_s)
-      @current_namespace ||= []
-      @current_namespace += keys
-      instance_eval(&blk) if block_given?
-      @current_namespace -= keys
-      @namespace_options = nil if @current_namespace.empty?
-      nil
-    end
-
-    def method_missing(method_name, *args)
-      attributes.send(method_name, *args)
-    rescue NoMethodError
-      @current_namespace ||= []
-      @namespace_options ||= { precedence: default }
-      if args.empty?
-        deep_key = @current_namespace.dup << method_name.to_s
-        return ::Chef::CookieCutter::Namespace.deep_fetch!(attributes, deep_key)
-      else
-        vivified = @current_namespace.inject(@namespace_options[:precedence]) do |hash, item|
-          hash[item] ||= {}
-          hash[item]
+    module MonkeyPatches
+      module Node
+        def method_missing(method_name, *args)
+          super
+        rescue NoMethodError
+          @current_namespace ||= []
+          @namespace_options ||= { precedence: default }
+          if args.empty?
+            deep_key = @current_namespace.dup << method_name.to_s
+            return ::Chef::CookieCutter::Namespace.deep_fetch!(attributes, deep_key)
+          else
+            vivified = @current_namespace.inject(@namespace_options[:precedence]) do |hash, item|
+              hash[item] ||= {}
+              hash[item]
+            end
+            vivified[method_name.to_s] = args.size == 1 ? args.first : args
+            return nil
+          end
         end
-        vivified[method_name.to_s] = args.size == 1 ? args.first : args
-        return nil
       end
     end
   end

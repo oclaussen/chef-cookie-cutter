@@ -39,6 +39,7 @@ class Chef
 end
 
 # Register Monkey Patches
+Chef::Node.send(:prepend, Chef::CookieCutter::MonkeyPatches::Node)
 Chef::Resource::LWRPBase.send(:prepend, Chef::CookieCutter::MonkeyPatches::LWRPResource)
 Chef::Provider::LWRPBase.send(:prepend, Chef::CookieCutter::MonkeyPatches::LWRPProvider)
 
@@ -46,5 +47,6 @@ Chef::Provider::LWRPBase.send(:prepend, Chef::CookieCutter::MonkeyPatches::LWRPP
 Chef::Recipe.send(:include, Chef::CookieCutter::DSL)
 Chef::Resource.send(:include, Chef::CookieCutter::DSL)
 Chef::Provider.send(:include, Chef::CookieCutter::DSL)
+Chef::Node.send(:include, Chef::CookieCutter::AttributeDSL)
 Chef::Resource::LWRPBase.send(:extend, Chef::CookieCutter::ResourceDSL)
 Chef::Provider::LWRPBase.send(:extend, Chef::CookieCutter::ProviderDSL)
