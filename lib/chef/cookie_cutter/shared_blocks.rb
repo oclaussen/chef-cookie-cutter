@@ -40,17 +40,17 @@ EOH
 
     module DSL
       def shared?(name)
-        exist_state?(:dotfiles, :shared_blocks, name)
+        exist_state?(:cookie_cutter, :shared_blocks, name)
       end
 
       def shared(name, &block)
         fail Chef::CookieCutter::SharedBlocks::SharedBlockAlreadyDefined, name if shared? name
-        store_state(:dotfiles, :shared_blocks, name, block)
+        store_state(:cookie_cutter, :shared_blocks, name, block)
       end
 
       def include_shared(name)
         fail Chef::CookieCutter::SharedBlocks::SharedBlockNotDefined, name unless shared? name
-        block = fetch_state(:dotfiles, :shared_blocks, name)
+        block = fetch_state(:cookie_cutter, :shared_blocks, name)
         instance_eval(&block)
       end
     end
