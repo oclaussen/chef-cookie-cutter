@@ -1,8 +1,10 @@
 Chef Cookie Cutter
 ==================
-[![Gem](https://img.shields.io/gem/v/chef-cookie_cutter.svg)][gem]
+[![Gem](https://img.shields.io/gem/v/chef-cookie_cutter.svg?style=plastic)][gem]
+[![Travis](https://img.shields.io/travis/oclaussen/chef-cookie-cutter.svg?style=plastic)][travis]
 
 [gem]: https://rubygems.org/gems/chef-cookie_cutter
+[travis]: http://travis-ci.org/oclaussen/chef-cookie-cutter
 
 Cookie Cutter is a small collection of hacks and workarounds for Chef. I
 created it mostly to learn a bit more about Ruby programming and Chef internals.
