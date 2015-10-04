@@ -20,7 +20,7 @@ class Chef
   module CookieCutter
     class FancyProperty < ::Chef::Property
       def call(resource, *args, **kwargs, &blk)
-        return get(resource) if args.empty? && kwargs.empty?
+        return get(resource) if args.empty? && kwargs.empty? && !block_given?
         set(resource, *args, **kwargs, &blk)
       end
 
