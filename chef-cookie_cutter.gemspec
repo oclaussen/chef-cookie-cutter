@@ -15,9 +15,7 @@ Gem::Specification.new do |spec|
   spec.files         = Dir['lib/**/*.rb']
   spec.require_paths = ['lib']
 
-  spec.add_runtime_dependency 'chef', '> 0'
-
   spec.add_development_dependency 'bundler', '~> 1.3'
-  spec.add_development_dependency 'rake'
-  spec.add_development_dependency 'rubocop', '~> 0'
+  spec.add_development_dependency 'rake', '~> 10.4'
+  spec.add_development_dependency 'rubocop', '~> 0.34'
 end
