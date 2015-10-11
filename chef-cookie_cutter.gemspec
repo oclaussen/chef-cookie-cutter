@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |spec|
   spec.name         = 'chef-cookie_cutter'
-  spec.version      = '0.0.4'
+  spec.version      = '0.0.5.dev'
   spec.author       = 'Ole Claussen'
   spec.email        = 'claussen.ole@gmail.com'
   spec.license      = 'Apache 2.0'
