@@ -27,9 +27,7 @@ class Chef
       ::Gem::Requirement.new(constraint).satisfied_by?(gem_version)
     end
 
-    if chef_version('~> 12.5')
-      require_relative 'cookie_cutter/fancy_property'
-    end
+    require_relative 'cookie_cutter/fancy_property' if chef_version('~> 12.5')
 
     require_relative 'cookie_cutter/lwrp_build_params'
     require_relative 'cookie_cutter/lwrp_include'

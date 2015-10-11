@@ -43,7 +43,11 @@ class Chef
       end
 
       def coerce(resource, *args, **kwargs, &blk)
-        if options.key?(:coerce_class)
+        if options.key?(:coerce_class) && options.key?(:coerce)
+          value = coerce_class(options[:coerce_class], *args, **kwargs, &blk)
+          value = coerce_proc(resource, options[:coerce], value)
+          value
+        elsif options.key?(:coerce_class)
           coerce_class(options[:coerce_class], *args, **kwargs, &blk)
         elsif options.key?(:coerce)
           coerce_proc(resource, options[:coerce], *args, **kwargs, &blk)
