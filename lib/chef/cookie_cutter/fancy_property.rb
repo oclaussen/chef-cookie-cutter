@@ -59,13 +59,15 @@ class Chef
       end
 
       def coerce_class(clazz, *args, **kwargs, &blk)
-        value = clazz.new(*args, **kwargs)
+        args << kwargs unless kwargs.empty?
+        value = clazz.new(*args)
         value.instance_eval(&blk) if block_given?
         value
       end
 
       def coerce_proc(resource, coerce, *args, **kwargs, &blk)
-        value = resource.instance_exec(*args, **kwargs, &coerce) unless resource.nil?
+        args << kwargs unless kwargs.empty?
+        value = resource.instance_exec(*args, &coerce) unless resource.nil?
         value.instance_eval(&blk) if block_given?
         value = coerce(resource, value) if value.is_a?(DelayedEvaluator)
         value
