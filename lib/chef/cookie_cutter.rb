@@ -29,6 +29,7 @@ class Chef
 
     require_relative 'cookie_cutter/fancy_property' if chef_version('~> 12.5')
 
+    require_relative 'cookie_cutter/extended_provides'
     require_relative 'cookie_cutter/lwrp_build_params'
     require_relative 'cookie_cutter/lwrp_include'
     require_relative 'cookie_cutter/namespace'
@@ -41,6 +42,8 @@ CC = Chef::CookieCutter
 
 # Register Monkey Patches
 Chef::Node.send :prepend, CC::MonkeyPatches::Node
+Chef::RunContext.send :prepend, CC::MonkeyPatches::RunContext
+Chef::ResourceBuilder.send :prepend, CC::MonkeyPatches::ResourceBuilder
 Chef::Resource::LWRPBase.send :prepend, CC::MonkeyPatches::LWRPResource
 Chef::Provider::LWRPBase.send :prepend, CC::MonkeyPatches::LWRPProvider
 

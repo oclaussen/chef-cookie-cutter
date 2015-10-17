@@ -76,7 +76,7 @@ end
 
 ### LWRP extensions
 
-#### Build Parametels
+#### Build Parameters
 - `lwrp_run_context`
 - `lwrp_cookbook_name`
 - `lwrp_filename`
@@ -85,6 +85,19 @@ Patches the Lightweight Resource and Provider classes to give access to the
 parameters resource or provider is built with. The three methods given above
 are class methods on created LWPR class and already available while the LWRP is
 built.
+
+#### Resource builder access
+Makes the `ResourceBuilder` that is used to resolve the current resource
+available in the run context. This way it can be read, for example, in the
+block parameter for `Resource.provides`.
+
+##### Example
+```ruby
+# File my_cookbook/resources/test.rb
+provides :fancy_resource_name do |node|
+  node.run_context.resource_builder.name =~ /test/
+end
+```
 
 #### Mixins
 - `lwrp_include`
