@@ -44,12 +44,14 @@ class Chef
       end
 
       def coerce(resource, *args, **kwargs, &blk)
-        if options.key?(:coerce_class) && options.key?(:coerce)
+        if options.key?(:coerce_class)
           value = coerce_class(options[:coerce_class], *args, **kwargs, &blk)
-          value = coerce_proc(resource, options[:coerce], value)
+          value = coerce_proc(resource, options[:coerce], value) if options.key?(:coerce)
           value
-        elsif options.key?(:coerce_class)
-          coerce_class(options[:coerce_class], *args, **kwargs, &blk)
+        elsif options.key?(:coerce_resource)
+          value = coerce_resource(resource, options[:coerce_resource], args[0], &blk)
+          value = coerce_proc(resource, options[:coerce], value) if options.key?(:coerce)
+          value
         elsif options.key?(:coerce)
           coerce_proc(resource, options[:coerce], *args, **kwargs, &blk)
         elsif args.length == 1 && kwargs.empty?
@@ -64,6 +66,26 @@ class Chef
         value = clazz.new(*args)
         value.instance_eval(&blk) if block_given?
         value
+      end
+
+      def coerce_resource(resource, resource_type, value, &blk)
+        return value if value.is_a?(::Chef::Resource) && value.declared_type == resource_type
+        new_resource = ::Chef::ResourceBuilder.new(
+          type: resource_type,
+          name: value,
+          created_at: caller[0],
+          params: nil,
+          run_context: resource.run_context,
+          cookbook_name: resource.cookbook_name,
+          recipe_name: resource.recipe_name,
+          enclosing_provider: nil
+        ).build(&blk)
+        resource.run_context.resource_collection.insert(
+          new_resource,
+          resource_type: resource_type,
+          instance_name: value
+        )
+        new_resource
       end
 
       def coerce_proc(resource, coerce, *args, **kwargs, &blk)
@@ -85,8 +107,8 @@ class Chef
           EOM
         else
           declared_in.class_eval <<-EOM, __FILE__, __LINE__ + 1
-            def #{name}(value=NOT_PASSED)
-              self.class.properties[#{name.inspect}].call(self, value, {})
+            def #{name}(value=NOT_PASSED, &blk)
+              self.class.properties[#{name.inspect}].call(self, value, {}, &blk)
             end
             def #{name}=(value)
               self.class.properties[#{name.inspect}].set(self, value, {})
@@ -111,7 +133,7 @@ class Chef
           [
             :declared_in, :name, :instance_variable_name, :desired_state,
             :identity, :default, :name_property, :coerce, :required, :collect,
-            :allow_kwargs, :coerce_class
+            :allow_kwargs, :coerce_class, :coerce_resource
           ].include?(k)
         end
       end

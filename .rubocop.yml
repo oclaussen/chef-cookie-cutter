@@ -6,9 +6,11 @@ Style/Documentation:
   Enabled: false
 
 Metrics/LineLength:
-  Max: 110
+  Max: 120
 Metrics/MethodLength:
   Max: 20
+Metrics/ClassLength:
+  Enabled: false
 Metrics/AbcSize:
   Enabled: false
 Metrics/CyclomaticComplexity:
