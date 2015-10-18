@@ -21,6 +21,7 @@ class Chef
     class FancyProperty < ::Chef::Property
       def call(resource, *args, **kwargs, &blk)
         return get(resource) if args.empty? && kwargs.empty? && !block_given?
+        return get(resource) if args[0] == NOT_PASSED
         set(resource, *args, **kwargs, &blk)
       end
 
@@ -75,16 +76,34 @@ class Chef
 
       def emit_dsl
         return unless instance_variable_name
-        # Holy shit, this looks evil. But Chef does it the same way so yeah.
-        declared_in.class_eval <<-EOM, __FILE__, __LINE__ + 1
-          def #{name}(*args, **kwargs, &blk)
-            self.class.properties[#{name.inspect}].call(self, *args, **kwargs, &blk)
-          end
-        EOM
+
+        if allow_kwargs?
+          declared_in.class_eval <<-EOM, __FILE__, __LINE__ + 1
+            def #{name}(*args, **kwargs, &blk)
+              self.class.properties[#{name.inspect}].call(self, *args, **kwargs, &blk)
+            end
+          EOM
+        else
+          declared_in.class_eval <<-EOM, __FILE__, __LINE__ + 1
+            def #{name}(value=NOT_PASSED)
+              self.class.properties[#{name.inspect}].call(self, value, {})
+            end
+            def #{name}=(value)
+              self.class.properties[#{name.inspect}].set(self, value, {})
+            end
+          EOM
+        end
       end
 
       def collect?
         options[:collect]
+      end
+
+      def allow_kwargs?
+        return true if options[:allow_kwargs]
+        return true if options.key?(:coerce) && options[:coerce].arity != 1
+        return true if options.key?(:coerce_class) && options[:coerce_class].instance_method(:initialize).arity != 1
+        false
       end
 
       def validation_options
@@ -92,7 +111,7 @@ class Chef
           [
             :declared_in, :name, :instance_variable_name, :desired_state,
             :identity, :default, :name_property, :coerce, :required, :collect,
-            :coerce_class
+            :allow_kwargs, :coerce_class
           ].include?(k)
         end
       end
