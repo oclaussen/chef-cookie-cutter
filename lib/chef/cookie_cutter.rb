@@ -30,6 +30,7 @@ class Chef
     require_relative 'cookie_cutter/fancy_property' if chef_version('~> 12.5')
 
     require_relative 'cookie_cutter/extended_provides'
+    require_relative 'cookie_cutter/fake_resource'
     require_relative 'cookie_cutter/lwrp_build_params'
     require_relative 'cookie_cutter/lwrp_include'
     require_relative 'cookie_cutter/namespace'
@@ -54,3 +55,12 @@ Chef::Provider.send :include, CC::DSL
 Chef::Node.send :include, CC::AttributeDSL
 Chef::Resource::LWRPBase.send :extend, CC::ResourceDSL
 Chef::Provider::LWRPBase.send :extend, CC::ProviderDSL
+
+# Register DSL for optional gems
+begin
+  ::Gem::Specification.find_by_name('knife-cookbook-doc')
+  require 'knife_cookbook_doc/documenting_lwrp_base'
+  DocumentingLWRPBase.send :extend, CC::DocumentingResourceDSL
+  DocumentingLWRPBase.send :extend, CC::FakeResource
+rescue ::Gem::LoadError # rubocop:disable Lint/HandleExceptions
+end

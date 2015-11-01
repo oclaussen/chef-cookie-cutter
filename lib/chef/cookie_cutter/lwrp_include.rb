@@ -63,5 +63,11 @@ class Chef
         include util_class.build_resource_module_from_file(filename)
       end
     end
+
+    module DocumentingResourceDSL
+      def lwrp_include(name, cookbook: nil)
+        puts "Include resource #{name} from cookbook #{cookbook}"
+      end
+    end
   end
 end
