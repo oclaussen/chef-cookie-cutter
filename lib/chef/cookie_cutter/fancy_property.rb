@@ -147,5 +147,25 @@ class Chef
         end
       end
     end
+
+    module DocumentingResourceDSL
+      def property(name, type=NOT_PASSED, **options)
+        result = super(name, type, options)
+        attribute_specifications[name] = options
+        result
+      end
+    end
+
+    module MonkeyPatches
+      module DocumentResourceModel
+        def attribute_description(attribute)
+          description = super || ''
+          opts = @native_resource.attribute_specifications[attribute]
+          description += " Must be a `#{opts[:coerce_resource]}` resource or a block." if opts.has_key?(:coerce_resource)
+          description += ' This attribute can be specified multiple times.' if opts.has_key?(:collect)
+          description
+        end
+      end
+    end
   end
 end

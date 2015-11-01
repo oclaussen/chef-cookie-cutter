@@ -56,11 +56,19 @@ Chef::Node.send :include, CC::AttributeDSL
 Chef::Resource::LWRPBase.send :extend, CC::ResourceDSL
 Chef::Provider::LWRPBase.send :extend, CC::ProviderDSL
 
-# Register DSL for optional gems
+# Register Monkey Patches and DSL for optional gems
 begin
   ::Gem::Specification.find_by_name('knife-cookbook-doc')
+  # Unfortunately, knife-cookbook-doc does not define a main gem file.
+  require 'knife_cookbook_doc/base_model'
   require 'knife_cookbook_doc/documenting_lwrp_base'
+  require 'knife_cookbook_doc/definitions_model'
+  require 'knife_cookbook_doc/readme_model'
+  require 'knife_cookbook_doc/recipe_model'
+  require 'knife_cookbook_doc/resource_model'
+  require 'knife_cookbook_doc/attributes_model'
   DocumentingLWRPBase.send :extend, CC::DocumentingResourceDSL
   DocumentingLWRPBase.send :extend, CC::FakeResource
+  KnifeCookbookDoc::ResourceModel.send :prepend, CC::MonkeyPatches::DocumentResourceModel
 rescue ::Gem::LoadError # rubocop:disable Lint/HandleExceptions
 end
