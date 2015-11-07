@@ -173,6 +173,22 @@ my_cookbook_test 'test' do
 end
 ```
 
+### Cookbook Doc integration
+
+Cookie cutter integrates with [knife cookbook doc](https://github.com/realityforge/knife-cookbook-doc)
+to generate documentation when features of this gem are used.
+
+## Fancy properties
+For resources, properties are recognized by as well as attributes. If the property
+is a fancy property, `:collect` and `:coerce_resource` options are automatically
+detected and documented.
+
+## Mixin resources
+A mixin resource can be annotated with `@mixin`. This will exclude the resource
+from `DocumentReadmeModel.resources`, and offer a new `DocumentReadmeModel.mixin_resources`
+which returns only the annotated resources. Mixin resources will not be documented
+unless a custom README template is used to include these resources.
+
 License & Authors
 -----------------
 - Author: Ole Claussen (claussen.ole@gmail.com)
