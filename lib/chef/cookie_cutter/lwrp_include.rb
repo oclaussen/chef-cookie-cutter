@@ -65,8 +65,73 @@ class Chef
     end
 
     module DocumentingResourceDSL
+      def mixins
+        @mixins ||= []
+      end
+
       def lwrp_include(name, cookbook: nil)
-        puts "Include resource #{name} from cookbook #{cookbook}"
+        mixins << { name: name, cookbook: cookbook }
+      end
+    end
+
+    module MonkeyPatches
+      # Monkey Patches for KnifeCookbookDoc::ReadmeModel
+      # Additionally searches for resource files in sub directories in addition.
+      # Adds getter for mixin resources.
+      module DocumentReadmeModel
+        def initialize(cookbook_dir, constraints)
+          super
+          Dir["#{cookbook_dir}/resources/*/**/*.rb"].sort.each do |resource_filename|
+            @resources << ::KnifeCookbookDoc::ResourceModel.new(@metadata.name, resource_filename)
+          end
+        end
+
+        def resources
+          @resources.select { |r| !r.is_mixin? }
+        end
+
+        def mixin_resources
+          @resources.select(&:is_mixin?)
+        end
+      end
+
+      # Monkey Patches for KnifeCookbookDoc::ResourceModel
+      # Overwrites load_descriptions to additionally check if a lwrp is a mixin.
+      module DocumentResourceModel
+        def name
+          return @mixin if is_mixin?
+          super
+        end
+
+        def is_mixin?
+          !@mixin.nil?
+        end
+
+        def mixins
+          result = []
+          result += @native_resource.mixins.select { |mixin| mixin[:cookbook].nil? }
+          result += @native_resource.mixins.reject { |mixin| mixin[:cookbook].nil? }
+          result
+        end
+
+        def load_descriptions
+          current_section = 'main'
+          @native_resource.description.each_line do |line|
+            if /^ *\@action *([^ ]*) (.*)$/ =~ line
+              action_descriptions[$1] = $2.strip
+            elsif /^ *\@attribute *([^ ]*) (.*)$/ =~ line
+              attribute_descriptions[$1] = $2.strip
+            elsif /^ *\@section (.*)$/ =~ line
+              current_section = $1.strip
+            elsif /^ *\@mixin(.*)$/ =~ line
+              @mixin = $1.strip
+            else
+              lines = (top_level_descriptions[current_section] || [])
+              lines << line.gsub("\n",'')
+              top_level_descriptions[current_section] = lines
+            end
+          end
+        end
       end
     end
   end

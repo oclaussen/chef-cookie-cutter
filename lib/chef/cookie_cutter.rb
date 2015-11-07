@@ -69,6 +69,7 @@ begin
   require 'knife_cookbook_doc/attributes_model'
   DocumentingLWRPBase.send :extend, CC::DocumentingResourceDSL
   DocumentingLWRPBase.send :extend, CC::FakeResource
+  KnifeCookbookDoc::ReadmeModel.send :prepend, CC::MonkeyPatches::DocumentReadmeModel
   KnifeCookbookDoc::ResourceModel.send :prepend, CC::MonkeyPatches::DocumentResourceModel
 rescue ::Gem::LoadError # rubocop:disable Lint/HandleExceptions
 end

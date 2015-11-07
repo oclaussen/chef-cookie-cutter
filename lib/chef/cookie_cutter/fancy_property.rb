@@ -157,6 +157,9 @@ class Chef
     end
 
     module MonkeyPatches
+      # Monkey Patches for KnifeCookbookDoc::ResourceModel
+      # Enriches attribute/property description with additional info
+      # if certain options are passed to FancyProperty
       module DocumentResourceModel
         def attribute_description(attribute)
           description = super || ''
