@@ -87,33 +87,41 @@ class Chef
         end
 
         def resources
-          @resources.select { |r| !r.is_mixin? }
+          @resources.reject(&:mixin?)
         end
 
         def mixin_resources
-          @resources.select(&:is_mixin?)
+          @resources.select(&:mixin?)
         end
       end
 
       # Monkey Patches for KnifeCookbookDoc::ResourceModel
       # Overwrites load_descriptions to additionally check if a lwrp is a mixin.
+      # Saves cookbook and file name in instance variables
       module DocumentResourceModel
-        def name
-          return @mixin if is_mixin?
+        def initialize(cookbook_name, file)
+          @cookbook_name = cookbook_name
+          @file = file
           super
         end
 
-        def is_mixin?
-          !@mixin.nil?
+        def name
+          return filename_to_qualified_string(@cookbook_name, @file) if mixin?
+          super
+        end
+
+        def mixin?
+          @mixin
         end
 
         def mixins
-          result = []
-          result += @native_resource.mixins.select { |mixin| mixin[:cookbook].nil? }
-          result += @native_resource.mixins.reject { |mixin| mixin[:cookbook].nil? }
-          result
+          @native_resource.mixins.map do |mixin|
+            mixin[:cookbook] = @cookbook_name if mixin[:cookbook].nil?
+            filename_to_qualified_string(mixin[:cookbook], mixin[:name])
+          end
         end
 
+        # rubocop:disable Style/PerlBackrefs
         def load_descriptions
           current_section = 'main'
           @native_resource.description.each_line do |line|
@@ -124,10 +132,10 @@ class Chef
             elsif /^ *\@section (.*)$/ =~ line
               current_section = $1.strip
             elsif /^ *\@mixin(.*)$/ =~ line
-              @mixin = $1.strip
+              @mixin = true
             else
               lines = (top_level_descriptions[current_section] || [])
-              lines << line.gsub("\n",'')
+              lines << line.delete("\n")
               top_level_descriptions[current_section] = lines
             end
           end
