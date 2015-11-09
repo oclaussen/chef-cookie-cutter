@@ -17,7 +17,48 @@
 require 'chef/property'
 
 class Chef
+  # Define Chef::Property in case we are pre 12.5 and it doesn't exist yet.
+  class Property
+  end
+
   module CookieCutter
+    module FancyPropertyModule
+      module_function
+
+      # rubocop:disable Style/GuardClause
+      def register
+        if defined?(DocumentingLWRPBase)
+          DocumentingLWRPBase.send :extend, DocumentingResourceDSL
+        end
+        if defined?(KnifeCookbookDoc)
+          KnifeCookbookDoc::ResourceModel.send :prepend, MonkeyPatches::DocumentResourceModel
+        end
+      end
+
+      module DocumentingResourceDSL
+        def property(name, type = NOT_PASSED, **options)
+          result = super(name, type, options)
+          attribute_specifications[name] = options
+          result
+        end
+      end
+
+      module MonkeyPatches
+        # Monkey Patches for KnifeCookbookDoc::ResourceModel
+        # Enriches attribute/property description with additional info
+        # if certain options are passed to FancyProperty
+        module DocumentResourceModel
+          def attribute_description(attribute)
+            description = super || ''
+            opts = @native_resource.attribute_specifications[attribute]
+            description += " Must be a `#{opts[:coerce_resource]}` resource or a block." if opts.key?(:coerce_resource)
+            description += ' This attribute can be specified multiple times.' if opts.key?(:collect)
+            description
+          end
+        end
+      end
+    end
+
     class FancyProperty < ::Chef::Property
       def call(resource, *args, **kwargs, &blk)
         return get(resource) if args.empty? && kwargs.empty? && !block_given?
@@ -144,29 +185,6 @@ class Chef
           get_value(resource) << value
         else
           super
-        end
-      end
-    end
-
-    module DocumentingResourceDSL
-      def property(name, type = NOT_PASSED, **options)
-        result = super(name, type, options)
-        attribute_specifications[name] = options
-        result
-      end
-    end
-
-    module MonkeyPatches
-      # Monkey Patches for KnifeCookbookDoc::ResourceModel
-      # Enriches attribute/property description with additional info
-      # if certain options are passed to FancyProperty
-      module DocumentResourceModel
-        def attribute_description(attribute)
-          description = super || ''
-          opts = @native_resource.attribute_specifications[attribute]
-          description += " Must be a `#{opts[:coerce_resource]}` resource or a block." if opts.key?(:coerce_resource)
-          description += ' This attribute can be specified multiple times.' if opts.key?(:collect)
-          description
         end
       end
     end

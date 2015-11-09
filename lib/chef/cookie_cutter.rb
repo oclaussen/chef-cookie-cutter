@@ -22,15 +22,9 @@ require 'chef/provider/lwrp_base'
 
 class Chef
   module CookieCutter
-    def self.chef_version(constraint)
-      gem_version = ::Gem::Version.new(::Chef::VERSION)
-      ::Gem::Requirement.new(constraint).satisfied_by?(gem_version)
-    end
-
-    require_relative 'cookie_cutter/fancy_property' if chef_version('~> 12.5')
-
     require_relative 'cookie_cutter/extended_provides'
     require_relative 'cookie_cutter/fake_resource'
+    require_relative 'cookie_cutter/fancy_property'
     require_relative 'cookie_cutter/lwrp_build_params'
     require_relative 'cookie_cutter/lwrp_include'
     require_relative 'cookie_cutter/namespace'
@@ -39,37 +33,10 @@ class Chef
   end
 end
 
-CC = Chef::CookieCutter
-
-# Register Monkey Patches
-Chef::Node.send :prepend, CC::MonkeyPatches::Node
-Chef::RunContext.send :prepend, CC::MonkeyPatches::RunContext
-Chef::ResourceBuilder.send :prepend, CC::MonkeyPatches::ResourceBuilder
-Chef::Resource::LWRPBase.send :prepend, CC::MonkeyPatches::LWRPResource
-Chef::Provider::LWRPBase.send :prepend, CC::MonkeyPatches::LWRPProvider
-
-# Register DSL
-Chef::Recipe.send :include, CC::DSL
-Chef::Resource.send :include, CC::DSL
-Chef::Provider.send :include, CC::DSL
-Chef::Node.send :include, CC::AttributeDSL
-Chef::Resource::LWRPBase.send :extend, CC::ResourceDSL
-Chef::Provider::LWRPBase.send :extend, CC::ProviderDSL
-
-# Register Monkey Patches and DSL for optional gems
-begin
-  ::Gem::Specification.find_by_name('knife-cookbook-doc')
-  # Unfortunately, knife-cookbook-doc does not define a main gem file.
-  require 'knife_cookbook_doc/base_model'
-  require 'knife_cookbook_doc/documenting_lwrp_base'
-  require 'knife_cookbook_doc/definitions_model'
-  require 'knife_cookbook_doc/readme_model'
-  require 'knife_cookbook_doc/recipe_model'
-  require 'knife_cookbook_doc/resource_model'
-  require 'knife_cookbook_doc/attributes_model'
-  DocumentingLWRPBase.send :extend, CC::DocumentingResourceDSL
-  DocumentingLWRPBase.send :extend, CC::FakeResource
-  KnifeCookbookDoc::ReadmeModel.send :prepend, CC::MonkeyPatches::DocumentReadmeModel
-  KnifeCookbookDoc::ResourceModel.send :prepend, CC::MonkeyPatches::DocumentResourceModel
-rescue ::Gem::LoadError # rubocop:disable Lint/HandleExceptions
-end
+Chef::CookieCutter::ExtendedProvides.register
+Chef::CookieCutter::FancyPropertyModule.register
+Chef::CookieCutter::LWRPBuildParams.register
+Chef::CookieCutter::LWRPInclude.register
+Chef::CookieCutter::Namespace.register
+Chef::CookieCutter::RunState.register
+Chef::CookieCutter::SharedBlocks.register

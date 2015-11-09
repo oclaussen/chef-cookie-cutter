@@ -20,6 +20,12 @@ class Chef
     module SharedBlocks
       module_function
 
+      def register
+        Chef::Recipe.send :include, DSL
+        Chef::Resource.send :include, DSL
+        Chef::Provider.send :include, DSL
+      end
+
       class SharedBlockAlreadyDefined < StandardError
         def initialize(name)
           super <<-EOH
@@ -36,22 +42,22 @@ The shared block with the name #{name} is not defined.
 EOH
         end
       end
-    end
 
-    module DSL
-      def shared?(name)
-        exist_state?(:cookie_cutter, :shared_blocks, name)
-      end
+      module DSL
+        def shared?(name)
+          exist_state?(:cookie_cutter, :shared_blocks, name)
+        end
 
-      def shared(name, &block)
-        fail Chef::CookieCutter::SharedBlocks::SharedBlockAlreadyDefined, name if shared? name
-        store_state(:cookie_cutter, :shared_blocks, name, block)
-      end
+        def shared(name, &block)
+          fail SharedBlocks::SharedBlockAlreadyDefined, name if shared? name
+          store_state(:cookie_cutter, :shared_blocks, name, block)
+        end
 
-      def include_shared(name)
-        fail Chef::CookieCutter::SharedBlocks::SharedBlockNotDefined, name unless shared? name
-        block = fetch_state(:cookie_cutter, :shared_blocks, name)
-        instance_eval(&block)
+        def include_shared(name)
+          fail SharedBlocks::SharedBlockNotDefined, name unless shared? name
+          block = fetch_state(:cookie_cutter, :shared_blocks, name)
+          instance_eval(&block)
+        end
       end
     end
   end

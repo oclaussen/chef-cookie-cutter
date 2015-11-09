@@ -17,43 +17,52 @@
 
 class Chef
   module CookieCutter
-    module MonkeyPatches
-      # Monkey Patches for Chef::Resource::LWRPBase
-      # Makes the parameters of build_from_file (i.e. cookbook_name, filename
-      # and run_context) available in the created class.
-      module LWRPResource
-        module ClassMethods
-          def build_from_file(cookbook_name, filename, run_context)
-            define_singleton_method(:lwrp_cookbook_name) { cookbook_name }
-            define_singleton_method(:lwrp_filename) { filename }
-            define_singleton_method(:lwrp_run_context) { run_context }
-            super
-          end
-        end
+    module LWRPBuildParams
+      module_function
 
-        def self.prepended(base)
-          class << base
-            prepend ClassMethods
-          end
-        end
+      def register
+        Chef::Resource::LWRPBase.send :prepend, MonkeyPatches::LWRPResource
+        Chef::Provider::LWRPBase.send :prepend, MonkeyPatches::LWRPProvider
       end
 
-      # Monkey Patches for Chef::Provider::LWRPBase
-      # Makes the parameters of build_from_file (i.e. cookbook_name, filename
-      # and run_context) available in the created class.
-      module LWRPProvider
-        module ClassMethods
-          def build_from_file(cookbook_name, filename, run_context)
-            define_singleton_method(:lwrp_cookbook_name) { cookbook_name }
-            define_singleton_method(:lwrp_filename) { filename }
-            define_singleton_method(:lwrp_run_context) { run_context }
-            super
+      module MonkeyPatches
+        # Monkey Patches for Chef::Resource::LWRPBase
+        # Makes the parameters of build_from_file (i.e. cookbook_name, filename
+        # and run_context) available in the created class.
+        module LWRPResource
+          module ClassMethods
+            def build_from_file(cookbook_name, filename, run_context)
+              define_singleton_method(:lwrp_cookbook_name) { cookbook_name }
+              define_singleton_method(:lwrp_filename) { filename }
+              define_singleton_method(:lwrp_run_context) { run_context }
+              super
+            end
+          end
+
+          def self.prepended(base)
+            class << base
+              prepend ClassMethods
+            end
           end
         end
 
-        def self.prepended(base)
-          class << base
-            prepend ClassMethods
+        # Monkey Patches for Chef::Provider::LWRPBase
+        # Makes the parameters of build_from_file (i.e. cookbook_name, filename
+        # and run_context) available in the created class.
+        module LWRPProvider
+          module ClassMethods
+            def build_from_file(cookbook_name, filename, run_context)
+              define_singleton_method(:lwrp_cookbook_name) { cookbook_name }
+              define_singleton_method(:lwrp_filename) { filename }
+              define_singleton_method(:lwrp_run_context) { run_context }
+              super
+            end
+          end
+
+          def self.prepended(base)
+            class << base
+              prepend ClassMethods
+            end
           end
         end
       end

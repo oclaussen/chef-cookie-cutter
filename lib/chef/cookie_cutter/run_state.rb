@@ -20,6 +20,12 @@ class Chef
     module RunState
       module_function
 
+      def register
+        Chef::Recipe.send :include, DSL
+        Chef::Resource.send :include, DSL
+        Chef::Provider.send :include, DSL
+      end
+
       class RunStateDoesNotExistError < StandardError
         def initialize(keys, key)
           hash = keys.map { |k| "['#{k}']" }
@@ -43,26 +49,26 @@ EOH
       def fetch_state(node, *keys)
         keys.map!(&:to_s)
         keys.inject(node.run_state) do |hash, key|
-          fail ::Chef::CookieCutter::RunState::RunStateDoesNotExistError.new(keys, key) unless hash.key? key
+          fail RunState::RunStateDoesNotExistError.new(keys, key) unless hash.key? key
           hash[key]
         end
       end
-    end
 
-    module DSL
-      def store_state(*subkeys, key, value)
-        ::Chef::CookieCutter::RunState.store_state(node, *subkeys, key, value)
-      end
+      module DSL
+        def store_state(*subkeys, key, value)
+          RunState.store_state(node, *subkeys, key, value)
+        end
 
-      def fetch_state(*keys)
-        ::Chef::CookieCutter::RunState.fetch_state(node, *keys)
-      end
+        def fetch_state(*keys)
+          RunState.fetch_state(node, *keys)
+        end
 
-      def exist_state?(*keys)
-        ::Chef::CookieCutter::RunState.fetch_state(node, *keys)
-        true
-      rescue ::Chef::CookieCutter::RunState::RunStateDoesNotExistError
-        false
+        def exist_state?(*keys)
+          RunState.fetch_state(node, *keys)
+          true
+        rescue RunState::RunStateDoesNotExistError
+          false
+        end
       end
     end
   end

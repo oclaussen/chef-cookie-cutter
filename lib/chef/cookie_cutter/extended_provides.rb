@@ -17,19 +17,28 @@
 
 class Chef
   module CookieCutter
-    module MonkeyPatches
-      module RunContext
-        attr_reader :resource_builder
+    module ExtendedProvides
+      module_function
 
-        def build_resource(builder)
-          @resource_builder = builder
-        end
+      def register
+        Chef::RunContext.send :prepend, MonkeyPatches::RunContext
+        Chef::ResourceBuilder.send :prepend, MonkeyPatches::ResourceBuilder
       end
 
-      module ResourceBuilder
-        def build(&block)
-          run_context.build_resource(self)
-          super(&block)
+      module MonkeyPatches
+        module RunContext
+          attr_reader :resource_builder
+
+          def build_resource(builder)
+            @resource_builder = builder
+          end
+        end
+
+        module ResourceBuilder
+          def build(&block)
+            run_context.build_resource(self)
+            super(&block)
+          end
         end
       end
     end

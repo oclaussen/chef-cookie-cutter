@@ -20,6 +20,13 @@ class Chef
     module Namespace
       module_function
 
+      def register
+        Chef::Recipe.send :include, DSL
+        Chef::Resource.send :include, DSL
+        Chef::Provider.send :include, DSL
+        Chef::Node.send :prepend, MonkeyPatches::Node
+      end
+
       class AttributeDoesNotExistError < StandardError
         def initialize(keys, key)
           super <<-EOH
@@ -37,61 +44,59 @@ EOH
           if hash.key?(key)
             hash[key]
           else
-            fail ::Chef::CookieCutter::Namespace::AttributeDoesNotExistError.new(keys, key)
+            fail AttributeDoesNotExistError.new(keys, key)
           end
         end
       end
-    end
 
-    module AttributeDSL
-      def namespace(*args, **kwargs, &blk)
-        @namespace_options = namespace_options.merge(kwargs)
-        keys = args.map(&:to_s)
-        @current_namespace = current_namespace + keys
-        instance_eval(&blk) if block_given?
-        @current_namespace = current_namespace - keys
-        @namespace_options = nil if @current_namespace.empty?
-        nil
-      end
-
-      private
-
-      def namespace_options
-        @namespace_options ||= { precedence: default }
-      end
-
-      def current_namespace
-        @current_namespace ||= []
-      end
-
-      def vivified
-        precedence = namespace_options[:precedence]
-        current_namespace.inject(precedence) do |hash, item|
-          hash[item] ||= {}
-          hash[item]
+      module DSL
+        def namespace(*args)
+          keys = args.map(&:to_s)
+          attribute = Namespace.deep_fetch(node.attributes, keys)
+          yield attribute if block_given?
         end
       end
-    end
 
-    module DSL
-      def namespace(*args)
-        keys = args.map(&:to_s)
-        attribute = ::Chef::CookieCutter::Namespace.deep_fetch(node.attributes, keys)
-        yield attribute if block_given?
-      end
-    end
+      module MonkeyPatches
+        module Node
+          def namespace(*args, **kwargs, &blk)
+            @namespace_options = namespace_options.merge(kwargs)
+            keys = args.map(&:to_s)
+            @current_namespace = current_namespace + keys
+            instance_eval(&blk) if block_given?
+            @current_namespace = current_namespace - keys
+            @namespace_options = nil if @current_namespace.empty?
+            nil
+          end
 
-    module MonkeyPatches
-      module Node
-        def method_missing(method_name, *args)
-          super
-        rescue NoMethodError
-          if args.empty?
-            deep_key = current_namespace.dup << method_name.to_s
-            return ::Chef::CookieCutter::Namespace.deep_fetch!(attributes, deep_key)
-          else
-            vivified[method_name.to_s] = args.size == 1 ? args.first : args
-            return nil
+          def method_missing(method_name, *args)
+            super
+          rescue NoMethodError
+            if args.empty?
+              deep_key = current_namespace.dup << method_name.to_s
+              return Namespace.deep_fetch!(attributes, deep_key)
+            else
+              vivified[method_name.to_s] = args.size == 1 ? args.first : args
+              return nil
+            end
+          end
+
+          private
+
+          def namespace_options
+            @namespace_options ||= { precedence: default }
+          end
+
+          def current_namespace
+            @current_namespace ||= []
+          end
+
+          def vivified
+            precedence = namespace_options[:precedence]
+            current_namespace.inject(precedence) do |hash, item|
+              hash[item] ||= {}
+              hash[item]
+            end
           end
         end
       end
