@@ -30,6 +30,7 @@ class Chef
     require_relative 'cookie_cutter/namespace'
     require_relative 'cookie_cutter/run_state'
     require_relative 'cookie_cutter/shared_blocks'
+    require_relative 'cookie_cutter/spec_matchers'
   end
 end
 
@@ -40,3 +41,4 @@ Chef::CookieCutter::LWRPInclude.register
 Chef::CookieCutter::Namespace.register
 Chef::CookieCutter::RunState.register
 Chef::CookieCutter::SharedBlocks.register
+Chef::CookieCutter::SpecMatchers.register
