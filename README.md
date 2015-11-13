@@ -207,7 +207,7 @@ Custom resources will automatically generate matchers for
 [ChefSpec](https://github.com/sethvargo/chefspec) using their `resource_name`
 and all actions. Custom `provide` declarations are not considered for matchers.
 
-### Example
+##### Example
 
 ```ruby
 # File my_cookbook/resources/test.rb
