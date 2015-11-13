@@ -15,11 +15,13 @@ Components
 ### DSL extensions
 
 #### Namespaces
+
 Namespaces are inspired by and behave exactly like in the great
 [Chef Sugar](https://github.com/sethvargo/chef-sugar). However, it is also
 possible to access the attributes in recipes with the same syntax.
 
 ##### Examples
+
 ```ruby
 # File my_cookbook/attributes/test.rb
 namespace 'my_cookbook', 'test' do
@@ -37,6 +39,7 @@ end
 ```
 
 #### Run state
+
 - `store_state`
 - `fetch_state`
 - `exist_state?`
@@ -45,6 +48,7 @@ Provides some methods to easily store values in the Chef run state, so they
 can be used across recipes.
 
 ##### Examples
+
 ```ruby
 # File my_cookbook/recipes/test.rb
 store_state(:my_cookbook, :test, :foo, 'bar')
@@ -55,6 +59,7 @@ end
 ```
 
 #### Shared blocks
+
 - `shared`
 - `include_shared`
 - `shared?`
@@ -63,6 +68,7 @@ Uses the run state to define blocks of attributes that are repeatedly used
 across recipes and resources.
 
 ##### Examples
+
 ```ruby
 shared :foo do
   content 'foo'
@@ -74,24 +80,27 @@ file 'testfile' do
 end
 ```
 
-### LWRP extensions
+### Custom resource extensions
 
 #### Build Parameters
+
 - `lwrp_run_context`
 - `lwrp_cookbook_name`
 - `lwrp_filename`
 
 Patches the Lightweight Resource and Provider classes to give access to the
 parameters the resource or provider is built with. The three methods given above
-are class methods on the created LWPR class and already available while the
-LWRP is built.
+are class methods on the created Resource class and already available while the
+Resource is built.
 
 #### Resource builder access
+
 Makes the `ResourceBuilder` that is used to resolve the current resource
 available in the run context. This way it can be read, for example, in the
 block parameter for `Resource.provides`.
 
 ##### Example
+
 ```ruby
 # File my_cookbook/resources/test.rb
 provides :fancy_resource_name do |node|
@@ -100,11 +109,21 @@ end
 ```
 
 #### Mixins
+
 - `lwrp_include`
 
-Allows Lightweight Resources and Providers to mixin other resources or providers.
+Allows resources and providers to mixin other resources or providers.
+
+##### Cookbook Doc integration
+
+Mixins integrate with [knife cookbook doc](https://github.com/realityforge/knife-cookbook-doc).
+A mixin resource can be annotated with `@mixin`. This will exclude the resource
+from `DocumentReadmeModel.resources`, and offer a new `DocumentReadmeModel.mixin_resources`
+which returns only the annotated resources. Mixin resources will not be documented
+unless a custom README template is used to include these resources.
 
 ##### Example
+
 ```ruby
 # File my_cookbook/resources/mixins/common.rb
 attribute :foo, kind_of: String, default: 'foo'
@@ -126,6 +145,7 @@ end
 ```
 
 #### Fancy properties
+
 **Note:** Requires Chef >= 12.5.1
 
 Chef 12.5 introduces properties to easier define resources. The `FancyProperty`
@@ -151,7 +171,15 @@ be built based on these, and assigned to the property value.
 `:coerce_resource` block and the object or resource instance is passed to the
 `:coerce` block.
 
+##### Cookbook Doc integration
+
+Fancy properties integrate with [knife cookbook doc](https://github.com/realityforge/knife-cookbook-doc).
+Properties are recognized by as well as attributes for documentation. If that
+property is a fancy property, `:collect` and `:coerce_resource` options are
+automatically detected and documented.
+
 ##### Examples
+
 ```ruby
 # File my_cookbook/resources/test.rb
 
@@ -173,21 +201,28 @@ my_cookbook_test 'test' do
 end
 ```
 
-### Cookbook Doc integration
+#### Automatic ChefSpec Matchers
 
-Cookie cutter integrates with [knife cookbook doc](https://github.com/realityforge/knife-cookbook-doc)
-to generate documentation when features of this gem are used.
+Custom resources will automatically generate matchers for
+[ChefSpec](https://github.com/sethvargo/chefspec) using their `resource_name`
+and all actions. Custom `provide` declarations are not considered for matchers.
 
-## Fancy properties
-For resources, properties are recognized by as well as attributes. If the property
-is a fancy property, `:collect` and `:coerce_resource` options are automatically
-detected and documented.
+### Example
 
-## Mixin resources
-A mixin resource can be annotated with `@mixin`. This will exclude the resource
-from `DocumentReadmeModel.resources`, and offer a new `DocumentReadmeModel.mixin_resources`
-which returns only the annotated resources. Mixin resources will not be documented
-unless a custom README template is used to include these resources.
+```ruby
+# File my_cookbook/resources/test.rb
+
+resource_name :test
+
+allowed_actions [:create, :delete]
+```
+
+```ruby
+# File my_cookbook
+
+expect(chef_run).to create_test('foo')
+expect(chef_run).to delete_test('bar')
+```
 
 License & Authors
 -----------------
