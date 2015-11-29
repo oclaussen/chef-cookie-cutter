@@ -14,24 +14,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+require_relative 'namespace'
 
 class Chef
   module CookieCutter
-    module FakeResource
-      class FakeClass
-        extend FakeResource
-      end
-
-      def method_missing(*)
-        # do nothing
-      end
-
-      def respond_to?(*)
-        true
-      end
-
-      def const_missing(*)
-        FakeClass
+    module Namespace
+      module DSL
+        def namespace(*args)
+          keys = args.map(&:to_s)
+          attribute = Namespace.deep_fetch(node.attributes, keys)
+          yield attribute if block_given?
+        end
       end
     end
   end

@@ -14,16 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-require 'chef/recipe'
-require 'chef/resource'
-require 'chef/resource/lwrp_base'
-require 'chef/provider'
-require 'chef/provider/lwrp_base'
 
 class Chef
   module CookieCutter
     require_relative 'cookie_cutter/extended_provides'
-    require_relative 'cookie_cutter/fake_resource'
     require_relative 'cookie_cutter/fancy_property'
     require_relative 'cookie_cutter/include_resource'
     require_relative 'cookie_cutter/namespace'
@@ -32,11 +26,3 @@ class Chef
     require_relative 'cookie_cutter/spec_matchers'
   end
 end
-
-Chef::CookieCutter::ExtendedProvides.register
-Chef::CookieCutter::FancyPropertyModule.register
-Chef::CookieCutter::IncludeResource.register
-Chef::CookieCutter::Namespace.register
-Chef::CookieCutter::RunState.register
-Chef::CookieCutter::SharedBlocks.register
-Chef::CookieCutter::SpecMatchers.register

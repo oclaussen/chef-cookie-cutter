@@ -14,21 +14,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-require 'chef/property'
 
 class Chef
-  # Define Chef::Property in case we are pre 12.5 and it doesn't exist yet.
-  class Property
-  end
-
   module CookieCutter
     module FancyPropertyModule
-      require_relative 'fancy_property/property'
-      require_relative 'fancy_property/cookbook_doc'
-
-      # rubocop:disable Style/GuardClause
-      if defined?(KnifeCookbookDoc)
-        KnifeCookbookDoc::ResourceModel.send :prepend, MonkeyPatches::DocumentResourceModel
+      module MonkeyPatches
+        # Monkey Patches for KnifeCookbookDoc::ResourceModel
+        # Enriches attribute/property description with additional info
+        # if certain options are passed to FancyProperty
+        module DocumentResourceModel
+          def attribute_description(attribute)
+            description = super || ''
+            opts = @native_resource.attribute_specifications[attribute]
+            description += " Must be a `#{opts[:coerce_resource]}` resource or a block." if opts.key?(:coerce_resource)
+            description += ' This attribute can be specified multiple times.' if opts.key?(:collect)
+            description
+          end
+        end
       end
     end
   end

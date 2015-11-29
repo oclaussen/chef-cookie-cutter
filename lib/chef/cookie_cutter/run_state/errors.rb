@@ -14,14 +14,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-require 'chef/resource'
 
 class Chef
   module CookieCutter
-    module SpecMatchers
-      require_relative 'spec_matchers/monkey_patches'
-
-      ::Chef::Resource::LWRPBase.send :prepend, MonkeyPatches::CustomResource
+    module RunState
+      module Errors
+        class RunStateDoesNotExistError < StandardError
+          def initialize(keys, key)
+            hash = keys.map { |k| "['#{k}']" }
+            super <<-EOH
+The run_state does not contain an element at run_state#{hash.join}.
+Specifically, #{key} is not defined.
+EOH
+          end
+        end
+      end
     end
   end
 end

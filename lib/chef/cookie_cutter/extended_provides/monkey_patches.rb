@@ -14,14 +14,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-require 'chef/resource'
 
 class Chef
   module CookieCutter
-    module SpecMatchers
-      require_relative 'spec_matchers/monkey_patches'
+    module ExtendedProvides
+      module MonkeyPatches
+        module RunContext
+          attr_reader :resource_builder
 
-      ::Chef::Resource::LWRPBase.send :prepend, MonkeyPatches::CustomResource
+          def build_resource(builder)
+            @resource_builder = builder
+          end
+        end
+
+        module ResourceBuilder
+          def build(&block)
+            run_context.build_resource(self)
+            super(&block)
+          end
+        end
+      end
     end
   end
 end

@@ -14,51 +14,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+require 'chef/recipe'
+require 'chef/resource'
+require 'chef/provider'
+require_relative 'run_state'
 
 class Chef
   module CookieCutter
     module SharedBlocks
-      module_function
+      require_relative 'shared_blocks/dsl'
+      require_relative 'shared_blocks/errors'
 
-      def register
-        Chef::Recipe.send :include, DSL
-        Chef::Resource.send :include, DSL
-        Chef::Provider.send :include, DSL
-      end
-
-      class SharedBlockAlreadyDefined < StandardError
-        def initialize(name)
-          super <<-EOH
-A shared block with the name #{name} already exists. Please make sure that
-every shared block you define has a unique name.
-EOH
-        end
-      end
-
-      class SharedBlockNotDefined < StandardError
-        def initialize(name)
-          super <<-EOH
-The shared block with the name #{name} is not defined.
-EOH
-        end
-      end
-
-      module DSL
-        def shared?(name)
-          exist_state?(:cookie_cutter, :shared_blocks, name)
-        end
-
-        def shared(name, &block)
-          fail SharedBlocks::SharedBlockAlreadyDefined, name if shared? name
-          store_state(:cookie_cutter, :shared_blocks, name, block)
-        end
-
-        def include_shared(name)
-          fail SharedBlocks::SharedBlockNotDefined, name unless shared? name
-          block = fetch_state(:cookie_cutter, :shared_blocks, name)
-          instance_eval(&block)
-        end
-      end
+      ::Chef::Recipe.send :include, DSL
+      ::Chef::Resource.send :include, DSL
+      ::Chef::Provider.send :include, DSL
     end
   end
 end

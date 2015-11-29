@@ -14,33 +14,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+require 'chef/run_context'
+require 'chef/resource_builder'
 
 class Chef
   module CookieCutter
     module ExtendedProvides
-      module_function
+      require_relative 'extended_provides/monkey_patches'
 
-      def register
-        Chef::RunContext.send :prepend, MonkeyPatches::RunContext
-        Chef::ResourceBuilder.send :prepend, MonkeyPatches::ResourceBuilder
-      end
-
-      module MonkeyPatches
-        module RunContext
-          attr_reader :resource_builder
-
-          def build_resource(builder)
-            @resource_builder = builder
-          end
-        end
-
-        module ResourceBuilder
-          def build(&block)
-            run_context.build_resource(self)
-            super(&block)
-          end
-        end
-      end
+      ::Chef::RunContext.send :prepend, MonkeyPatches::RunContext
+      ::Chef::ResourceBuilder.send :prepend, MonkeyPatches::ResourceBuilder
     end
   end
 end

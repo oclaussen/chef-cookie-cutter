@@ -14,14 +14,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-require 'chef/resource'
+require_relative 'errors'
 
 class Chef
   module CookieCutter
-    module SpecMatchers
-      require_relative 'spec_matchers/monkey_patches'
+    module SharedBlocks
+      module DSL
+        def shared?(name)
+          exist_state?(:cookie_cutter, :shared_blocks, name)
+        end
 
-      ::Chef::Resource::LWRPBase.send :prepend, MonkeyPatches::CustomResource
+        def shared(name, &block)
+          fail Errors::SharedBlockAlreadyDefined, name if shared? name
+          store_state(:cookie_cutter, :shared_blocks, name, block)
+        end
+
+        def include_shared(name)
+          fail Errors::SharedBlockNotDefined, name unless shared? name
+          block = fetch_state(:cookie_cutter, :shared_blocks, name)
+          instance_eval(&block)
+        end
+      end
     end
   end
 end
