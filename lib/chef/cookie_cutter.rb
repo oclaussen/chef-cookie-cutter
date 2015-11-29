@@ -25,7 +25,6 @@ class Chef
     require_relative 'cookie_cutter/extended_provides'
     require_relative 'cookie_cutter/fake_resource'
     require_relative 'cookie_cutter/fancy_property'
-    require_relative 'cookie_cutter/lwrp_build_params'
     require_relative 'cookie_cutter/lwrp_include'
     require_relative 'cookie_cutter/namespace'
     require_relative 'cookie_cutter/run_state'
@@ -36,7 +35,6 @@ end
 
 Chef::CookieCutter::ExtendedProvides.register
 Chef::CookieCutter::FancyPropertyModule.register
-Chef::CookieCutter::LWRPBuildParams.register
 Chef::CookieCutter::LWRPInclude.register
 Chef::CookieCutter::Namespace.register
 Chef::CookieCutter::RunState.register

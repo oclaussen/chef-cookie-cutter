@@ -23,6 +23,7 @@ class Chef
       # rubocop:disable Style/GuardClause
       def register
         Chef::Resource::LWRPBase.send :extend, ResourceDSL
+        Chef::Resource::LWRPBase.send :prepend, MonkeyPatches::LWRPResource
         if defined?(DocumentingLWRPBase)
           DocumentingLWRPBase.send :extend, DocumentingResourceDSL
           DocumentingLWRPBase.send :extend, FakeResource
@@ -75,6 +76,24 @@ class Chef
       end
 
       module MonkeyPatches
+        # Monkey Patches for Chef::Resource::LWRPBase
+        # Makes the parameters of build_from_file (i.e. cookbook_name, filename
+        # and run_context) available in the created class.
+        module LWRPResource
+          module ClassMethods
+            def build_from_file(cookbook_name, filename, run_context)
+              define_singleton_method(:lwrp_cookbook_name) { cookbook_name }
+              super
+            end
+          end
+
+          def self.prepended(base)
+            class << base
+              prepend ClassMethods
+            end
+          end
+        end
+
         # Monkey Patches for KnifeCookbookDoc::ReadmeModel
         # Additionally searches for resource files in sub directories in addition.
         # Adds getter for mixin resources.

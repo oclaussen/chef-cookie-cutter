@@ -82,16 +82,6 @@ end
 
 ### Custom resource extensions
 
-#### Build Parameters
-
-- `lwrp_run_context`
-- `lwrp_cookbook_name`
-- `lwrp_filename`
-
-Patches the lightweight resource class to give access to the parameters the
-resource is built with. The three methods given above are class methods on the
-created Resource class and already available while the resource is built.
-
 #### Resource builder access
 
 Makes the `ResourceBuilder` that is used to resolve the current resource
