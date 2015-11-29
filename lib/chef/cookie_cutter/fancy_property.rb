@@ -26,7 +26,6 @@ class Chef
       require_relative 'fancy_property/property'
       require_relative 'fancy_property/cookbook_doc'
 
-      # rubocop:disable Style/GuardClause
       if defined?(KnifeCookbookDoc)
         KnifeCookbookDoc::ResourceModel.send :prepend, MonkeyPatches::DocumentResourceModel
       end
