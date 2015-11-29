@@ -27,19 +27,8 @@ class Chef
 
       # rubocop:disable Style/GuardClause
       def register
-        if defined?(DocumentingLWRPBase)
-          DocumentingLWRPBase.send :extend, DocumentingResourceDSL
-        end
         if defined?(KnifeCookbookDoc)
           KnifeCookbookDoc::ResourceModel.send :prepend, MonkeyPatches::DocumentResourceModel
-        end
-      end
-
-      module DocumentingResourceDSL
-        def property(name, type = NOT_PASSED, **options)
-          result = super(name, type, options)
-          attribute_specifications[name] = options
-          result
         end
       end
 
