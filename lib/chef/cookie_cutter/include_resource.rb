@@ -17,13 +17,13 @@
 
 class Chef
   module CookieCutter
-    module LWRPInclude
+    module IncludeResource
       module_function
 
       # rubocop:disable Style/GuardClause
       def register
         Chef::Resource::LWRPBase.send :extend, ResourceDSL
-        Chef::Resource::LWRPBase.send :prepend, MonkeyPatches::LWRPResource
+        Chef::Resource::LWRPBase.send :prepend, MonkeyPatches::CustomResource
         if defined?(DocumentingLWRPBase)
           DocumentingLWRPBase.send :extend, DocumentingResourceDSL
           DocumentingLWRPBase.send :extend, FakeResource
@@ -58,10 +58,10 @@ class Chef
       end
 
       module ResourceDSL
-        def lwrp_include(name, cookbook: nil)
-          cookbook = lwrp_cookbook_name if cookbook.nil?
-          filename = LWRPInclude.filename_for_record(run_context, cookbook, :resources, name)
-          include LWRPInclude.build_resource_module_from_file(filename)
+        def include_resource(name, cookbook: nil)
+          cookbook = resource_cookbook_name if cookbook.nil?
+          filename = IncludeResource.filename_for_record(run_context, cookbook, :resources, name)
+          include IncludeResource.build_resource_module_from_file(filename)
         end
       end
 
@@ -70,7 +70,7 @@ class Chef
           @mixins ||= []
         end
 
-        def lwrp_include(name, cookbook: nil)
+        def include_resource(name, cookbook: nil)
           mixins << { name: name, cookbook: cookbook }
         end
       end
@@ -79,10 +79,10 @@ class Chef
         # Monkey Patches for Chef::Resource::LWRPBase
         # Makes the parameters of build_from_file (i.e. cookbook_name, filename
         # and run_context) available in the created class.
-        module LWRPResource
+        module CustomResource
           module ClassMethods
             def build_from_file(cookbook_name, filename, run_context)
-              define_singleton_method(:lwrp_cookbook_name) { cookbook_name }
+              define_singleton_method(:resource_cookbook_name) { cookbook_name }
               super
             end
           end
@@ -115,7 +115,7 @@ class Chef
         end
 
         # Monkey Patches for KnifeCookbookDoc::ResourceModel
-        # Overwrites load_descriptions to additionally check if a lwrp is a mixin.
+        # Overwrites load_descriptions to additionally check if a resource is a mixin.
         # Saves cookbook and file name in instance variables
         module DocumentResourceModel
           def initialize(cookbook_name, file)

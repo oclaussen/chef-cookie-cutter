@@ -21,13 +21,13 @@ class Chef
       module_function
 
       def register
-        Chef::Resource::LWRPBase.send :prepend, MonkeyPatches::LWRPResource
+        Chef::Resource::LWRPBase.send :prepend, MonkeyPatches::CustomResource
       end
 
       module MonkeyPatches
         # Monkey Patches for Chef::Resource::LWRPBase
         # Automatically registers chef spec matchers after building the resource
-        module LWRPResource
+        module CustomResource
           module ClassMethods
             def build_from_file(cookbook_name, filename, run_context)
               resource = super

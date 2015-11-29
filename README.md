@@ -99,7 +99,7 @@ end
 
 #### Mixins
 
-- `lwrp_include`
+- `include_resource`
 
 Allows custom resources to mixin other resources.
 
@@ -120,7 +120,7 @@ attribute :foo, kind_of: String, default: 'foo'
 
 ```ruby
 # File my_other_cookbook/resources/test.rb
-lwrp_include 'mixin/common', cookbook: 'my_cookbook'
+include_resource 'mixin/common', cookbook: 'my_cookbook'
 
 attribute :bar, kind_of: String, default: 'bar'
 ```
