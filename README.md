@@ -88,10 +88,9 @@ end
 - `lwrp_cookbook_name`
 - `lwrp_filename`
 
-Patches the Lightweight Resource and Provider classes to give access to the
-parameters the resource or provider is built with. The three methods given above
-are class methods on the created Resource class and already available while the
-Resource is built.
+Patches the lightweight resource class to give access to the parameters the
+resource is built with. The three methods given above are class methods on the
+created Resource class and already available while the resource is built.
 
 #### Resource builder access
 
@@ -112,7 +111,7 @@ end
 
 - `lwrp_include`
 
-Allows resources and providers to mixin other resources or providers.
+Allows custom resources to mixin other resources.
 
 ##### Cookbook Doc integration
 

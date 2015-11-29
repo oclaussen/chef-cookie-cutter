@@ -23,7 +23,6 @@ class Chef
       # rubocop:disable Style/GuardClause
       def register
         Chef::Resource::LWRPBase.send :extend, ResourceDSL
-        Chef::Provider::LWRPBase.send :extend, ProviderDSL
         if defined?(DocumentingLWRPBase)
           DocumentingLWRPBase.send :extend, DocumentingResourceDSL
           DocumentingLWRPBase.send :extend, FakeResource
@@ -60,17 +59,7 @@ class Chef
       module ResourceDSL
         def lwrp_include(name, cookbook: nil)
           cookbook = lwrp_cookbook_name if cookbook.nil?
-          context = lwrp_run_context
-          filename = LWRPInclude.filename_for_record(context, cookbook, :resources, name)
-          include LWRPInclude.build_resource_module_from_file(filename)
-        end
-      end
-
-      module ProviderDSL
-        def lwrp_include(name, cookbook: nil)
-          cookbook = lwrp_cookbook_name if cookbook.nil?
-          context = lwrp_run_context
-          filename = LWRPInclude.filename_for_record(context, cookbook, :providers, name)
+          filename = LWRPInclude.filename_for_record(run_context, cookbook, :resources, name)
           include LWRPInclude.build_resource_module_from_file(filename)
         end
       end
