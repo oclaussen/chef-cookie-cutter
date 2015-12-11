@@ -39,7 +39,7 @@ class Chef
         end
 
         def exist_state?(*keys)
-          fetch_state(node, *keys)
+          fetch_state(*keys)
           true
         rescue Errors::RunStateDoesNotExistError
           false

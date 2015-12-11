@@ -14,25 +14,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-require_relative 'errors'
 
 class Chef
   module CookieCutter
-    module SharedBlocks
-      module DSL
-        def shared?(name)
-          exist_state?(:cookie_cutter, :shared_blocks, name)
+    module IncludeProperties
+      module Errors
+        class SharedPropertiesAlreadyDefined < StandardError
+          def initialize(name)
+            super <<-EOH
+A shared property set with the name #{name} already exists. Please make sure that
+every shared property set you define has a unique name.
+EOH
+          end
         end
 
-        def shared(name, &block)
-          fail Errors::SharedBlockAlreadyDefined, name if shared? name
-          store_state(:cookie_cutter, :shared_blocks, name, block)
-        end
-
-        def include_shared(name)
-          fail Errors::SharedBlockNotDefined, name unless shared? name
-          block = fetch_state(:cookie_cutter, :shared_blocks, name)
-          instance_eval(&block)
+        class SharedPropertiesNotDefined < StandardError
+          def initialize(name)
+            super <<-EOH
+A property set with the name #{name} has not been shared.
+EOH
+          end
         end
       end
     end

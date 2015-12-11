@@ -21,9 +21,9 @@ require_relative 'run_state'
 
 class Chef
   module CookieCutter
-    module SharedBlocks
-      require_relative 'shared_blocks/dsl'
-      require_relative 'shared_blocks/errors'
+    module IncludeProperties
+      require_relative 'include_properties/dsl'
+      require_relative 'include_properties/errors'
 
       ::Chef::Recipe.send :include, DSL
       ::Chef::Resource.send :include, DSL

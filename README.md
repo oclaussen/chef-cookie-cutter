@@ -58,25 +58,25 @@ file 'testfile' do
 end
 ```
 
-#### Shared blocks
+#### Shared properties
 
-- `shared`
-- `include_shared`
-- `shared?`
+- `share_properties`
+- `include_properties`
+- `properties_shared?`
 
-Uses the run state to define blocks of attributes that are repeatedly used
+Uses the run state to define blocks of properties that can repeatedly be used
 across recipes and resources.
 
 ##### Examples
 
 ```ruby
-shared :foo do
+share_properties :foo do
   content 'foo'
   mode '0644'
 end
 
 file 'testfile' do
-  include_shared :foo
+  include_properties :foo
 end
 ```
 
