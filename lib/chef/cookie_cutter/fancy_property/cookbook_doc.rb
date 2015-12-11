@@ -22,13 +22,24 @@ class Chef
         # Monkey Patches for KnifeCookbookDoc::ResourceModel
         # Enriches attribute/property description with additional info
         # if certain options are passed to FancyProperty
+        # Removes argument declaration from description if present, and makes
+        # it available accessor
         module DocumentResourceModel
+          ARGS_REGEX = /@args\s*\(([^\(\)]+)\)\s*(.*)/
+
           def attribute_description(attribute)
-            description = super || ''
+            description = attribute_descriptions[attribute.to_s] || ''
+            description = ARGS_REGEX.match(description)[2] if description =~ ARGS_REGEX
             opts = @native_resource.attribute_specifications[attribute]
             description += " Must be a `#{opts[:coerce_resource]}` resource or a block." if opts.key?(:coerce_resource)
             description += ' This attribute can be specified multiple times.' if opts.key?(:collect)
             description
+          end
+
+          def attribute_arguments(attribute)
+            description = attribute_descriptions[attribute.to_s]
+            return [] unless description =~ ARGS_REGEX
+            ARGS_REGEX.match(description)[1].split(',').map(&:strip)
           end
         end
       end
