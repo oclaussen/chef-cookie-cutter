@@ -14,14 +14,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-require 'chef/resource'
 
 class Chef
   module CookieCutter
-    module SpecMatchers
-      require_relative 'spec_matchers/monkey_patches'
+    module IncludeResource
+      module FakeResource
+        class FakeClass
+          extend FakeResource
+        end
 
-      ::Chef::Resource::LWRPBase.send :prepend, MonkeyPatches::CustomResource
+        def method_missing(*)
+          # do nothing
+        end
+
+        def respond_to?(*)
+          true
+        end
+
+        def const_missing(*)
+          FakeClass
+        end
+      end
     end
   end
 end

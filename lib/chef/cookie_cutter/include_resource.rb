@@ -14,19 +14,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-require 'chef/property'
+require 'chef/resource/lwrp_base'
 
 class Chef
-  # Define Chef::Property in case we are pre 12.5 and it doesn't exist yet.
-  class Property
-  end
-
   module CookieCutter
-    module FancyPropertyModule
-      require_relative 'fancy_property/property'
-      require_relative 'fancy_property/cookbook_doc'
+    module IncludeResource
+      require_relative 'include_resource/dsl'
+      require_relative 'include_resource/monkey_patches'
+      require_relative 'include_resource/cookbook_doc'
+      require_relative 'include_resource/fake_resource'
 
+      Chef::Resource::LWRPBase.send :extend, DSL
+      Chef::Resource::LWRPBase.send :prepend, MonkeyPatches::CustomResource
+      if defined?(DocumentingLWRPBase)
+        DocumentingLWRPBase.send :extend, CookbookDocDSL
+        DocumentingLWRPBase.send :extend, FakeResource
+      end
       if defined?(KnifeCookbookDoc)
+        KnifeCookbookDoc::ReadmeModel.send :prepend, MonkeyPatches::DocumentReadmeModel
         KnifeCookbookDoc::ResourceModel.send :prepend, MonkeyPatches::DocumentResourceModel
       end
     end

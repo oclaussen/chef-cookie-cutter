@@ -14,14 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-require 'chef/resource'
 
 class Chef
   module CookieCutter
-    module SpecMatchers
-      require_relative 'spec_matchers/monkey_patches'
-
-      ::Chef::Resource::LWRPBase.send :prepend, MonkeyPatches::CustomResource
-    end
+    VERSION = '1.0.0'
   end
 end

@@ -14,14 +14,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-require 'chef/resource'
 
 class Chef
   module CookieCutter
-    module SpecMatchers
-      require_relative 'spec_matchers/monkey_patches'
+    module IncludeResource
+      module MonkeyPatches
+        # Monkey Patches for Chef::Resource::LWRPBase
+        # Makes the parameters of build_from_file (i.e. cookbook_name, filename
+        # and run_context) available in the created class.
+        module CustomResource
+          module ClassMethods
+            def build_from_file(cookbook_name, filename, run_context)
+              define_singleton_method(:resource_cookbook_name) { cookbook_name }
+              super
+            end
+          end
 
-      ::Chef::Resource::LWRPBase.send :prepend, MonkeyPatches::CustomResource
+          def self.prepended(base)
+            class << base
+              prepend ClassMethods
+            end
+          end
+        end
+      end
     end
   end
 end

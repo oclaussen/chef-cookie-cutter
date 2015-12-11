@@ -17,70 +17,13 @@
 
 class Chef
   module CookieCutter
-    module LWRPInclude
-      module_function
-
-      # rubocop:disable Style/GuardClause
-      def register
-        Chef::Resource::LWRPBase.send :extend, ResourceDSL
-        Chef::Provider::LWRPBase.send :extend, ProviderDSL
-        if defined?(DocumentingLWRPBase)
-          DocumentingLWRPBase.send :extend, DocumentingResourceDSL
-          DocumentingLWRPBase.send :extend, FakeResource
-        end
-        if defined?(KnifeCookbookDoc)
-          KnifeCookbookDoc::ReadmeModel.send :prepend, MonkeyPatches::DocumentReadmeModel
-          KnifeCookbookDoc::ResourceModel.send :prepend, MonkeyPatches::DocumentResourceModel
-        end
-      end
-
-      def try_file(filename)
-        return if File.exist?(filename) && File.readable?(filename)
-        fail IOError, "Cannot open or read #{filename}"
-      end
-
-      def filename_for_record(run_context, cookbook_name, segment, name)
-        name += '.rb' unless name.end_with?('.rb')
-        cookbook_version = run_context.cookbook_collection[cookbook_name]
-        file_vendor = ::Chef::Cookbook::FileVendor.create_from_manifest(cookbook_version.manifest)
-        manifest_record = cookbook_version.preferred_manifest_record(run_context.node, segment.to_s, name)
-        file_vendor.get_filename(manifest_record[:path])
-      end
-
-      def build_resource_module_from_file(filename)
-        try_file(filename)
-        resource_module = Module.new
-        resource_module.instance_variable_set('@filename', filename)
-        def resource_module.included(cls)
-          cls.class_eval(IO.read(@filename), @filename, 1)
-        end
-        resource_module
-      end
-
-      module ResourceDSL
-        def lwrp_include(name, cookbook: nil)
-          cookbook = lwrp_cookbook_name if cookbook.nil?
-          context = lwrp_run_context
-          filename = LWRPInclude.filename_for_record(context, cookbook, :resources, name)
-          include LWRPInclude.build_resource_module_from_file(filename)
-        end
-      end
-
-      module ProviderDSL
-        def lwrp_include(name, cookbook: nil)
-          cookbook = lwrp_cookbook_name if cookbook.nil?
-          context = lwrp_run_context
-          filename = LWRPInclude.filename_for_record(context, cookbook, :providers, name)
-          include LWRPInclude.build_resource_module_from_file(filename)
-        end
-      end
-
-      module DocumentingResourceDSL
+    module IncludeResource
+      module CookbookDocDSL
         def mixins
           @mixins ||= []
         end
 
-        def lwrp_include(name, cookbook: nil)
+        def include_resource(name, cookbook: nil)
           mixins << { name: name, cookbook: cookbook }
         end
       end
@@ -107,7 +50,7 @@ class Chef
         end
 
         # Monkey Patches for KnifeCookbookDoc::ResourceModel
-        # Overwrites load_descriptions to additionally check if a lwrp is a mixin.
+        # Overwrites load_descriptions to additionally check if a resource is a mixin.
         # Saves cookbook and file name in instance variables
         module DocumentResourceModel
           def initialize(cookbook_name, file)
@@ -138,7 +81,7 @@ class Chef
             @native_resource.description.each_line do |line|
               if /^ *\@action *([^ ]*) (.*)$/ =~ line
                 action_descriptions[$1] = $2.strip
-              elsif /^ *\@attribute *([^ ]*) (.*)$/ =~ line
+              elsif /^ *(?:\@attribute|\@property) *([^ ]*) (.*)$/ =~ line
                 attribute_descriptions[$1] = $2.strip
               elsif /^ *\@section (.*)$/ =~ line
                 current_section = $1.strip

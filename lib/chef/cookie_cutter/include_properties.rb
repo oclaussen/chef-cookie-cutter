@@ -14,14 +14,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+require 'chef/recipe'
 require 'chef/resource'
+require 'chef/provider'
+require_relative 'run_state'
 
 class Chef
   module CookieCutter
-    module SpecMatchers
-      require_relative 'spec_matchers/monkey_patches'
+    module IncludeProperties
+      require_relative 'include_properties/dsl'
+      require_relative 'include_properties/errors'
 
-      ::Chef::Resource::LWRPBase.send :prepend, MonkeyPatches::CustomResource
+      ::Chef::Recipe.send :include, DSL
+      ::Chef::Resource.send :include, DSL
+      ::Chef::Provider.send :include, DSL
     end
   end
 end

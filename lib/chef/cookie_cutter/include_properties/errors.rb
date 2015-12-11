@@ -14,14 +14,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-require 'chef/resource'
 
 class Chef
   module CookieCutter
-    module SpecMatchers
-      require_relative 'spec_matchers/monkey_patches'
+    module IncludeProperties
+      module Errors
+        class SharedPropertiesAlreadyDefined < StandardError
+          def initialize(name)
+            super <<-EOH
+A shared property set with the name #{name} already exists. Please make sure that
+every shared property set you define has a unique name.
+EOH
+          end
+        end
 
-      ::Chef::Resource::LWRPBase.send :prepend, MonkeyPatches::CustomResource
+        class SharedPropertiesNotDefined < StandardError
+          def initialize(name)
+            super <<-EOH
+A property set with the name #{name} has not been shared.
+EOH
+          end
+        end
+      end
     end
   end
 end

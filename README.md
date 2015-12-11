@@ -58,40 +58,29 @@ file 'testfile' do
 end
 ```
 
-#### Shared blocks
+#### Shared properties
 
-- `shared`
-- `include_shared`
-- `shared?`
+- `share_properties`
+- `include_properties`
+- `properties_shared?`
 
-Uses the run state to define blocks of attributes that are repeatedly used
+Uses the run state to define blocks of properties that can repeatedly be used
 across recipes and resources.
 
 ##### Examples
 
 ```ruby
-shared :foo do
+share_properties :foo do
   content 'foo'
   mode '0644'
 end
 
 file 'testfile' do
-  include_shared :foo
+  include_properties :foo
 end
 ```
 
 ### Custom resource extensions
-
-#### Build Parameters
-
-- `lwrp_run_context`
-- `lwrp_cookbook_name`
-- `lwrp_filename`
-
-Patches the Lightweight Resource and Provider classes to give access to the
-parameters the resource or provider is built with. The three methods given above
-are class methods on the created Resource class and already available while the
-Resource is built.
 
 #### Resource builder access
 
@@ -110,9 +99,9 @@ end
 
 #### Mixins
 
-- `lwrp_include`
+- `include_resource`
 
-Allows resources and providers to mixin other resources or providers.
+Allows custom resources to mixin other resources.
 
 ##### Cookbook Doc integration
 
@@ -131,7 +120,7 @@ attribute :foo, kind_of: String, default: 'foo'
 
 ```ruby
 # File my_other_cookbook/resources/test.rb
-lwrp_include 'mixin/common', cookbook: 'my_cookbook'
+include_resource 'mixin/common', cookbook: 'my_cookbook'
 
 attribute :bar, kind_of: String, default: 'bar'
 ```
