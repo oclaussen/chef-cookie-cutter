@@ -1,8 +1,10 @@
 # encoding: UTF-8
+$LOAD_PATH.unshift(File.expand_path('../lib', __FILE__))
+require 'chef/cookie_cutter/version'
 
 Gem::Specification.new do |spec|
   spec.name         = 'chef-cookie_cutter'
-  spec.version      = '0.2.0'
+  spec.version      = ::Chef::CookieCutter::VERSION
   spec.author       = 'Ole Claussen'
   spec.email        = 'claussen.ole@gmail.com'
   spec.license      = 'Apache 2.0'

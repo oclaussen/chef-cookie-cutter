@@ -17,13 +17,6 @@
 
 class Chef
   module CookieCutter
-    require_relative 'cookie_cutter/extended_provides'
-    require_relative 'cookie_cutter/fancy_property'
-    require_relative 'cookie_cutter/include_resource'
-    require_relative 'cookie_cutter/namespace'
-    require_relative 'cookie_cutter/run_state'
-    require_relative 'cookie_cutter/shared_blocks'
-    require_relative 'cookie_cutter/spec_matchers'
-    require_relative 'cookie_cutter/version'
+    VERSION = '0.2.0'
   end
 end
