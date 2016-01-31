@@ -14,17 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+require 'chef/recipe'
 
 class Chef
   module CookieCutter
-    require 'chef/cookie_cutter/autodocs'
-    require 'chef/cookie_cutter/extended_provides'
-    require 'chef/cookie_cutter/fancy_property'
-    require 'chef/cookie_cutter/include_properties'
-    require 'chef/cookie_cutter/include_resource'
-    require 'chef/cookie_cutter/namespace'
-    require 'chef/cookie_cutter/run_state'
-    require 'chef/cookie_cutter/spec_matchers'
-    require 'chef/cookie_cutter/version'
+    module Autodocs
+      require 'chef/cookie_cutter/autodocs/recipe_dsl'
+
+      ::Chef::Recipe.send :include, RecipeDSL
+    end
   end
 end

@@ -17,14 +17,24 @@
 
 class Chef
   module CookieCutter
-    require 'chef/cookie_cutter/autodocs'
-    require 'chef/cookie_cutter/extended_provides'
-    require 'chef/cookie_cutter/fancy_property'
-    require 'chef/cookie_cutter/include_properties'
-    require 'chef/cookie_cutter/include_resource'
-    require 'chef/cookie_cutter/namespace'
-    require 'chef/cookie_cutter/run_state'
-    require 'chef/cookie_cutter/spec_matchers'
-    require 'chef/cookie_cutter/version'
+    module Autodocs
+      module RecipeDSL
+        def description(text = nil)
+          if text.nil?
+            if instance_variable_defined?(:@description)
+              @description
+            else
+              run_context.cookbook_collection[cookbook_name].metadata.recipes[recipe_name]
+            end
+          else
+            @description = text
+          end
+        end
+
+        def short_description
+          Regexp.new('^(.*?\.(\z|\s))', Regexp::MULTILINE).match(description)[1]
+        end
+      end
+    end
   end
 end
