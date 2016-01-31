@@ -36,7 +36,7 @@ class Chef
           rescue NoMethodError
             if args.empty?
               deep_key = current_namespace.dup << method_name.to_s
-              return Namespace.deep_fetch!(attributes, deep_key)
+              return Namespace.deep_fetch(attributes, deep_key)
             else
               vivified[method_name.to_s] = args.size == 1 ? args.first : args
               return nil
