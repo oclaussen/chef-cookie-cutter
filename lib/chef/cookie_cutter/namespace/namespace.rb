@@ -34,11 +34,8 @@ EOH
       def deep_fetch(attributes, keys)
         keys.map!(&:to_s)
         keys.inject(attributes.to_hash) do |hash, key|
-          if hash.key?(key)
-            hash[key]
-          else
-            fail AttributeDoesNotExistError.new(keys, key)
-          end
+          fail AttributeDoesNotExistError.new(keys, key) unless hash.key?(key)
+          hash[key]
         end
       end
     end
