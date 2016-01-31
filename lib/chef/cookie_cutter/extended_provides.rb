@@ -20,7 +20,7 @@ require 'chef/resource_builder'
 class Chef
   module CookieCutter
     module ExtendedProvides
-      require_relative 'extended_provides/monkey_patches'
+      require 'chef/cookie_cutter/extended_provides/monkey_patches'
 
       ::Chef::RunContext.send :prepend, MonkeyPatches::RunContext
       ::Chef::ResourceBuilder.send :prepend, MonkeyPatches::ResourceBuilder

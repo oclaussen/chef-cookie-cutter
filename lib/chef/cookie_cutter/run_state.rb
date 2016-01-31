@@ -21,8 +21,8 @@ require 'chef/provider'
 class Chef
   module CookieCutter
     module RunState
-      require_relative 'run_state/dsl'
-      require_relative 'run_state/errors'
+      require 'chef/cookie_cutter/run_state/dsl'
+      require 'chef/cookie_cutter/run_state/errors'
 
       ::Chef::Recipe.send :include, DSL
       ::Chef::Resource.send :include, DSL

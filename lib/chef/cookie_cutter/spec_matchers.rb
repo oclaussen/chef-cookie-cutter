@@ -19,7 +19,7 @@ require 'chef/resource'
 class Chef
   module CookieCutter
     module SpecMatchers
-      require_relative 'spec_matchers/monkey_patches'
+      require 'chef/cookie_cutter/spec_matchers/monkey_patches'
 
       ::Chef::Resource::LWRPBase.send :prepend, MonkeyPatches::CustomResource
     end

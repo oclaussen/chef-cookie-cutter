@@ -22,9 +22,9 @@ require 'chef/node'
 class Chef
   module CookieCutter
     module Namespace
-      require_relative 'namespace/dsl'
-      require_relative 'namespace/monkey_patches'
-      require_relative 'namespace/namespace'
+      require 'chef/cookie_cutter/namespace/dsl'
+      require 'chef/cookie_cutter/namespace/monkey_patches'
+      require 'chef/cookie_cutter/namespace/namespace'
 
       ::Chef::Recipe.send :include, DSL
       ::Chef::Resource.send :include, DSL

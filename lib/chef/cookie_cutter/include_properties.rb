@@ -17,13 +17,13 @@
 require 'chef/recipe'
 require 'chef/resource'
 require 'chef/provider'
-require_relative 'run_state'
+require 'chef/cookie_cutter/run_state'
 
 class Chef
   module CookieCutter
     module IncludeProperties
-      require_relative 'include_properties/dsl'
-      require_relative 'include_properties/errors'
+      require 'chef/cookie_cutter/include_properties/dsl'
+      require 'chef/cookie_cutter/include_properties/errors'
 
       ::Chef::Recipe.send :include, DSL
       ::Chef::Resource.send :include, DSL

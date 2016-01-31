@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-require_relative 'namespace'
+require 'chef/cookie_cutter/namespace/namespace'
 
 class Chef
   module CookieCutter

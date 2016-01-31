@@ -19,10 +19,10 @@ require 'chef/resource/lwrp_base'
 class Chef
   module CookieCutter
     module IncludeResource
-      require_relative 'include_resource/dsl'
-      require_relative 'include_resource/monkey_patches'
-      require_relative 'include_resource/cookbook_doc'
-      require_relative 'include_resource/fake_resource'
+      require 'chef/cookie_cutter/include_resource/dsl'
+      require 'chef/cookie_cutter/include_resource/monkey_patches'
+      require 'chef/cookie_cutter/include_resource/cookbook_doc'
+      require 'chef/cookie_cutter/include_resource/fake_resource'
 
       Chef::Resource::LWRPBase.send :extend, DSL
       Chef::Resource::LWRPBase.send :prepend, MonkeyPatches::CustomResource

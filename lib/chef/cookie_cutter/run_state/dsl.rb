@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-require_relative 'errors'
+require 'chef/cookie_cutter/run_state/errors'
 
 class Chef
   module CookieCutter

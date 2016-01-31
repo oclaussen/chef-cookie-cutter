@@ -23,8 +23,8 @@ class Chef
 
   module CookieCutter
     module FancyPropertyModule
-      require_relative 'fancy_property/property'
-      require_relative 'fancy_property/cookbook_doc'
+      require 'chef/cookie_cutter/fancy_property/property'
+      require 'chef/cookie_cutter/fancy_property/cookbook_doc'
 
       if defined?(KnifeCookbookDoc)
         KnifeCookbookDoc::ResourceModel.send :prepend, MonkeyPatches::DocumentResourceModel
