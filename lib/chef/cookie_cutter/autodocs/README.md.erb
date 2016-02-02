@@ -1,7 +1,15 @@
-<% recipes.each do |recipe| %>
-## <%= recipe.recipe_name %>
+<% unless recipes.empty? %>
+# Recipes
 
-<%= recipe.short_description %>
+<% recipes.each do |recipe| %>
+* <% if recipe.description.empty? %><%= recipe.name %><% else %>[<%= recipe.name %>](#<%= recipe.name.delete(':') %>)<% end %><% unless recipe.short_description.empty? %> - <%= recipe.short_description %><% end %>
+<% end %>
+<% recipes.each do |recipe| -%>
+<% unless recipe.description.empty? -%>
+
+## <%= recipe.name %>
 
 <%= recipe.description %>
+<% end %>
+<% end %>
 <% end %>
