@@ -20,19 +20,20 @@ class Chef
     module Autodocs
       module RecipeDSL
         def description(text = nil)
-          if text.nil?
-            if instance_variable_defined?(:@description)
-              @description
-            else
-              run_context.cookbook_collection[cookbook_name].metadata.recipes[recipe_name]
-            end
-          else
-            @description = text
-          end
+          @description = text unless text.nil?
+          return @description unless @description.nil?
+          recipes = run_context.cookbook_collection[cookbook_name].metadata.recipes
+          recipe, _cookbook = Recipe.parse_recipe_name recipe_name, current_cookbook: cookbook_name
+          full_name = "#{cookbook_name}::#{recipe}"
+          return recipes[full_name] if recipes.key?(full_name)
+          return recipes[recipe] if recipes.key?(recipe)
+          ''
         end
 
         def short_description
-          Regexp.new('^(.*?\.(\z|\s))', Regexp::MULTILINE).match(description)[1]
+          match = Regexp.new('^(.*?\.(\z|\s))', Regexp::MULTILINE).match(description)
+          return description if match.nil?
+          match[1]
         end
       end
     end
