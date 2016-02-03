@@ -31,6 +31,8 @@ class Chef
       end
 
       class DocRunner
+        include Chef::Mixin::ConvertToClassName
+
         def initialize(cookbook_path)
           @cookbook_path = File.expand_path(cookbook_path)
 
@@ -51,6 +53,21 @@ class Chef
           @recipes
         end
 
+        def resources
+          return @resources if @resources
+          @resources = cookbook.resource_filenames.map do |file|
+            resource_class = Class.new(Chef::Resource::LWRPBase)
+            cookbook_name = cookbook.name
+            resource_class.define_singleton_method(:resource_cookbook_name) { cookbook_name }
+            resource_class.resource_name = filename_to_qualified_string(cookbook.name, file)
+            resource_class.run_context = run_context
+            fail IOError, "Cannot open or read #{file}!" unless File.exist?(file) && File.readable?(file)
+            resource_class.class_eval(IO.read(file), file, 1)
+            resource_class
+          end
+          @resources
+        end
+
         def get_binding # rubocop:disable Style/AccessorMethodName
           binding
         end
@@ -59,8 +76,8 @@ class Chef
 
         def client
           return @client if @client
-          @client = ::Chef::Client.new
-          @client.ohai.data = ::Chef::Mash.from_hash(::Fauxhai.mock.data)
+          @client = Chef::Client.new
+          @client.ohai.data = Mash.from_hash(::Fauxhai.mock.data)
           @client
         end
 
@@ -82,7 +99,7 @@ class Chef
         def compiler
           return @compiler if @compiler
           run_list = node.run_list.expand('_default')
-          @compiler = ::Chef::RunContext::CookbookCompiler.new(run_context, run_list, run_context.events)
+          @compiler = Chef::RunContext::CookbookCompiler.new(run_context, run_list, run_context.events)
           @compiler.instance_variable_set(:@cookbook_order, [File.basename(@cookbook_path)])
           run_context.instance_variable_set(:@cookbook_compiler, @compiler)
           @compiler.compile

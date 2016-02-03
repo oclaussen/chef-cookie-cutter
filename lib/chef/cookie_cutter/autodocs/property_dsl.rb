@@ -14,20 +14,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-require 'chef/property'
-require 'chef/recipe'
-require 'chef/resource/lwrp_base'
 
 class Chef
   module CookieCutter
     module Autodocs
-      require 'chef/cookie_cutter/autodocs/property_dsl'
-      require 'chef/cookie_cutter/autodocs/recipe_dsl'
-      require 'chef/cookie_cutter/autodocs/resource_dsl'
+      module PropertyDSL
+        def description
+          options[:description] || ''
+        end
 
-      ::Chef::Property.send :prepend, PropertyDSL
-      ::Chef::Recipe.send :include, RecipeDSL
-      ::Chef::Resource::LWRPBase.send :extend, ResourceDSL
+        def validation_options
+          super.delete_if { |k, _| k == :description }
+        end
+      end
     end
   end
 end

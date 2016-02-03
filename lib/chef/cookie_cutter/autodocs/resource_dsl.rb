@@ -18,20 +18,10 @@
 class Chef
   module CookieCutter
     module Autodocs
-      module RecipeDSL
-        def name
-          match = /(.+)?::(.+)/.match(recipe_name)
-          return recipe_name if match.nil?
-          match[2]
-        end
-
+      module ResourceDSL
         def description(text = nil)
           @description = text unless text.nil?
           return @description unless @description.nil?
-          recipes = run_context.cookbook_collection[cookbook_name].metadata.recipes
-          return recipes[name] if recipes.key?(name)
-          full_name = "#{cookbook_name}::#{name}"
-          return recipes[full_name] if recipes.key?(full_name)
           ''
         end
 

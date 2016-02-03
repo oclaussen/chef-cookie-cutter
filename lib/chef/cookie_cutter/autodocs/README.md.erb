@@ -1,4 +1,5 @@
 <% unless recipes.empty? %>
+
 # Recipes
 
 <% recipes.each do |recipe| %>
@@ -10,6 +11,41 @@
 ## <%= recipe.name %>
 
 <%= recipe.description %>
+<% end %>
+<% end %>
+<% end %>
+<% unless resources.empty? %>
+
+# Resources
+
+<% resources.each do |resource| %>
+* <% if resource.description.empty? %><%= resource.resource_name %><% else %>[<%= resource.resource_name %>](#<%= resource.resource_name %>)<% end %><% unless resource.short_description.empty? %> - <%= resource.short_description %><% end %>
+<% end %>
+<% resources.each do |resource| %>
+<% unless resource.description.empty? %>
+
+## <%= resource.resource_name %>
+
+<%= resource.description %>
+<% end %>
+<% unless resource.actions.empty? %>
+
+### Actions
+
+<%# if resource.default_action.is_a?(Array) %>
+* Default actions: [<%#= resource.default_action.join ', ' %>]
+<%# end %>
+<%# resource.actions.each do |action| %>
+* <%#= action.name %><%# unless action.description.empty? %>: <%#= action.description %><%# end %>
+<%# end %>
+<% end %>
+<% unless resource.properties.empty? %>
+
+### Properties
+
+<% resource.properties.each do |name, property| %>
+* <%= property.to_s %><% unless property.description.empty? %>: <%= property.description %><% end %>
+<% end %>
 <% end %>
 <% end %>
 <% end %>
