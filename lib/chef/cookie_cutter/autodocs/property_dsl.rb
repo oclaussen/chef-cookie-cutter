@@ -22,10 +22,14 @@ class Chef
         def description
           desc = ''
           desc = options[:description] if options.key?(:description)
-          desc += '.' unless desc.end_with?('.')
+          desc += '.' unless desc.empty? || desc.end_with?('.')
           desc += " Must be a `#{options[:coerce_resource]}` resource or a block." if options.key?(:coerce_resource)
           desc += ' This attribute can be specified multiple times.' if options[:collect]
-          desc += " Defaults to `#{options[:default].inspect}`." if options.key?(:default)
+          if options.key?(:default)
+            default = "`#{options[:default]}`"
+            default = options[:default].description if options[:default].is_a?(Chef::DelayedEvaluator)
+            desc += " Defaults to #{default}."
+          end
           desc
         end
 

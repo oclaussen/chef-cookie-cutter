@@ -27,7 +27,7 @@ class Chef
 
       ::Chef::Property.send :prepend, PropertyDSL
       ::Chef::Recipe.send :include, RecipeDSL
-      ::Chef::Resource::LWRPBase.send :extend, ResourceDSL
+      ::Chef::Resource::LWRPBase.send :include, ResourceDSL
     end
   end
 end

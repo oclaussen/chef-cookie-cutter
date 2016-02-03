@@ -19,16 +19,36 @@ class Chef
   module CookieCutter
     module Autodocs
       module ResourceDSL
-        def description(text = nil)
-          @description = text unless text.nil?
-          return @description unless @description.nil?
-          ''
+        module ClassMethods
+          def description(text = nil)
+            @description = text unless text.nil?
+            return @description unless @description.nil?
+            ''
+          end
+
+          def short_description
+            match = Regexp.new('^(.*?\.(\z|\s))', Regexp::MULTILINE).match(description)
+            return description if match.nil?
+            match[1].tr("\n", ' ').strip
+          end
         end
 
-        def short_description
-          match = Regexp.new('^(.*?\.(\z|\s))', Regexp::MULTILINE).match(description)
-          return description if match.nil?
-          match[1].tr("\n", ' ').strip
+        module ClassMethodsMP
+          def lazy(description = 'a lazy value', &blk)
+            lazy_proc = super(&blk)
+            lazy_proc.instance_variable_set :@description, description
+            lazy_proc.define_singleton_method :description do
+              @description
+            end
+            lazy_proc
+          end
+        end
+
+        def self.included(base)
+          class << base
+            include ClassMethods
+            prepend ClassMethodsMP
+          end
         end
       end
     end
