@@ -20,11 +20,19 @@ class Chef
     module Autodocs
       module PropertyDSL
         def description
-          options[:description] || ''
+          desc = ''
+          desc = options[:description] if options.key?(:description)
+          desc += '.' unless desc.end_with?('.')
+          desc += " Must be a `#{options[:coerce_resource]}` resource or a block." if options.key?(:coerce_resource)
+          desc += ' This attribute can be specified multiple times.' if options[:collect]
+          desc += " Defaults to `#{options[:default].inspect}`." if options.key?(:default)
+          desc
         end
 
         def validation_options
-          super.delete_if { |k, _| k == :description }
+          super.delete_if do |k, _|
+            [:description, :default_description].include? k
+          end
         end
       end
     end
