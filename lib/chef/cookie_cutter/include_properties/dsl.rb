@@ -25,12 +25,12 @@ class Chef
         end
 
         def share_properties(name, &block)
-          fail Errors::SharedPropertiesAlreadyDefined, name if properties_shared? name
+          raise Errors::SharedPropertiesAlreadyDefined, name if properties_shared? name
           store_state(:cookie_cutter, :shared_properties, name, block)
         end
 
         def include_properties(name, *args, **kwargs)
-          fail Errors::SharedPropertiesNotDefined, name unless properties_shared? name
+          raise Errors::SharedPropertiesNotDefined, name unless properties_shared? name
           block = fetch_state(:cookie_cutter, :shared_properties, name)
           args << kwargs unless kwargs.empty?
           instance_exec(*args, &block)

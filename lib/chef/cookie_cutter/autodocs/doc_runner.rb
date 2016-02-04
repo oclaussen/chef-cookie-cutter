@@ -59,7 +59,7 @@ class Chef
             resource_class.define_singleton_method(:resource_cookbook_name) { cookbook_name }
             resource_class.resource_name = filename_to_qualified_string(cookbook.name, file)
             resource_class.run_context = run_context
-            fail IOError, "Cannot open or read #{file}!" unless File.exist?(file) && File.readable?(file)
+            raise IOError, "Cannot open or read #{file}!" unless File.exist?(file) && File.readable?(file)
             resource_class.class_eval(IO.read(file), file, 1)
             resource_class
           end

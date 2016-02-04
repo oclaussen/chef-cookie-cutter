@@ -33,7 +33,7 @@ class Chef
         def fetch_state(*keys)
           keys.map!(&:to_s)
           keys.inject(node.run_state) do |hash, key|
-            fail Errors::RunStateDoesNotExistError.new(keys, key) unless hash.key? key
+            raise Errors::RunStateDoesNotExistError.new(keys, key) unless hash.key? key
             hash[key]
           end
         end

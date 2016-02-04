@@ -23,7 +23,7 @@ class Chef
 
       def try_file(filename)
         return if File.exist?(filename) && File.readable?(filename)
-        fail IOError, "Cannot open or read #{filename}"
+        raise IOError, "Cannot open or read #{filename}"
       end
 
       def filename_for_record(run_context, cookbook_name, segment, name)

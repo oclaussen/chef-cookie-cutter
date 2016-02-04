@@ -56,7 +56,7 @@ class Chef
         elsif args.length == 1 && kwargs.empty?
           args[0]
         else
-          fail Chef::Exceptions::ValidationFailed, "No coercion given for arguments #{args}, #{kwargs}"
+          raise Chef::Exceptions::ValidationFailed, "No coercion given for arguments #{args}, #{kwargs}"
         end
       end
 
