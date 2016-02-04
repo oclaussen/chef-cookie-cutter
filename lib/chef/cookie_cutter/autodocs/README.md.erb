@@ -32,12 +32,12 @@
 
 ### Actions
 
-<%# if resource.default_action.is_a?(Array) %>
-* Default actions: [<%#= resource.default_action.join ', ' %>]
-<%# end %>
-<%# resource.actions.each do |action| %>
-* <%#= action.name %><%# unless action.description.empty? %>: <%#= action.description %><%# end %>
-<%# end %>
+<% if resource.default_action.is_a?(Array) %>
+* Default actions: [<%= resource.default_action.join ', ' %>]
+<% end %>
+<% resource.actions.each do |action| %>
+* <%= action.to_s %><% if resource.action_descriptions.key?(action) %>: <%= resource.action_descriptions[action] %><% end %>
+<% end %>
 <% end %>
 <% unless resource.properties.empty? %>
 

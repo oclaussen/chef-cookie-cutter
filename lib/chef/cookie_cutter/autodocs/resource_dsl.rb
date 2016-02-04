@@ -31,9 +31,18 @@ class Chef
             return description if match.nil?
             match[1].tr("\n", ' ').strip
           end
+
+          def action_descriptions
+            @action_descriptions ||= {}
+          end
         end
 
         module ClassMethodsMP
+          def action(name, description = '', &blk)
+            super(name, &blk)
+            action_descriptions[name] = description
+          end
+
           def lazy(description = 'a lazy value', &blk)
             lazy_proc = super(&blk)
             lazy_proc.instance_variable_set :@description, description
