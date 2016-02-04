@@ -7,34 +7,23 @@
 
 ## Platform:
 
-<% metadata.platforms.each do |platform| %>
-* <%= platform %>
-<% end %>
+<%= list(metadata.platforms) %>
 <% end %>
 <% unless metadata.dependencies.empty? && metadata.recommendations.empty? && metadata.suggestions.empty? && metadata.conflicting.empty? %>
 
 ## Cookbooks:
 
-<% metadata.dependencies.each do |cookbook| %>
-* <%= cookbook %>
-<% end %>
-<% metadata.recommendations.each do |cookbook| %>
-* <%= cookbook %> (Recommended but not required)
-<% end %>
-<% metadata.suggestions.each do |cookbook| %>
-* <%= cookbook %> (Suggested but not required)
-<% end %>
-<% metadata.conflicting.each do |cookbook| %>
-* Conflicts with <%= cookbook %>
-<% end %>
+<%= list(metadata.dependencies) %>
+<%= list(metadata.recommendations.map { |cookbook| "#{cookbook} (Recommended but not required)" }) %>
+<%= list(metadata.suggestions.map { |cookbook| "#{cookbook} (Suggested but not required)" }) %>
+<%= list(metadata.conflicting.map { |cookbook| "Conflicts with #{cookbook}" }) %>
 <% end %>
 <% unless recipes.empty? %>
 
 # Recipes
 
-<% recipes.each do |recipe| %>
-* <% if recipe.description.empty? %><%= recipe.name %><% else %>[<%= recipe.name %>](#<%= recipe.name.delete(':') %>)<% end %><% unless recipe.short_description.empty? %> - <%= recipe.short_description %><% end %>
-<% end %>
+<%= segment_toc recipes %>
+
 <% recipes.each do |recipe| -%>
 <% unless recipe.description.empty? -%>
 
@@ -48,9 +37,8 @@
 
 # Resources
 
-<% resources.each do |resource| %>
-* <% if resource.description.empty? %><%= resource.resource_name %><% else %>[<%= resource.resource_name %>](#<%= resource.resource_name %>)<% end %><% unless resource.short_description.empty? %> - <%= resource.short_description %><% end %>
-<% end %>
+<%= segment_toc resources %>
+
 <% resources.each do |resource| %>
 <% unless resource.description.empty? %>
 
@@ -65,9 +53,7 @@
 <% if resource.default_action.is_a?(Array) %>
 * Default actions: [<%= resource.default_action.join ', ' %>]
 <% end %>
-<% resource.actions.each do |action| %>
-* <%= action.to_s %><% if resource.action_descriptions.key?(action) %>: <%= resource.action_descriptions[action] %><% end %>
-<% end %>
+<%= list(resource.actions.map { |action| "#{action.to_s}: #{resource.action_descriptions[action]}" }) %>
 <% end %>
 <% unless resource.properties.empty? %>
 

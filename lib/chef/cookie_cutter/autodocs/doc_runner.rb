@@ -15,6 +15,7 @@
 # limitations under the License.
 #
 
+require 'chef/cookie_cutter/autodocs/markdown_helper'
 require 'chef/client'
 require 'chef/mash'
 require 'chef/recipe'
@@ -24,6 +25,7 @@ class Chef
   module CookieCutter
     module Autodocs
       class DocRunner
+        include Chef::CookieCutter::Autodocs::MarkdownHelper
         include Chef::Mixin::ConvertToClassName
 
         def initialize(cookbook_path)

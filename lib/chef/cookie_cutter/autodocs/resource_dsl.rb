@@ -20,6 +20,10 @@ class Chef
     module Autodocs
       module ResourceDSL
         module ClassMethods
+          def name
+            resource_name
+          end
+
           def description(text = nil)
             @description = text unless text.nil?
             return @description unless @description.nil?
