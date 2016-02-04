@@ -1,3 +1,33 @@
+# <%= metadata.name %>
+
+<%= metadata.description %>
+
+# Requirements
+<% unless metadata.platforms.empty? %>
+
+## Platform:
+
+<% metadata.platforms.each do |platform| %>
+* <%= platform %>
+<% end %>
+<% end %>
+<% unless metadata.dependencies.empty? && metadata.recommendations.empty? && metadata.suggestions.empty? && metadata.conflicting.empty? %>
+
+## Cookbooks:
+
+<% metadata.dependencies.each do |cookbook| %>
+* <%= cookbook %>
+<% end %>
+<% metadata.recommendations.each do |cookbook| %>
+* <%= cookbook %> (Recommended but not required)
+<% end %>
+<% metadata.suggestions.each do |cookbook| %>
+* <%= cookbook %> (Suggested but not required)
+<% end %>
+<% metadata.conflicting.each do |cookbook| %>
+* Conflicts with <%= cookbook %>
+<% end %>
+<% end %>
 <% unless recipes.empty? %>
 
 # Recipes

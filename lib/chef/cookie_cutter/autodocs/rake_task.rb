@@ -35,12 +35,15 @@ class Chef
 
         def initialize(cookbook_path)
           @cookbook_path = File.expand_path(cookbook_path)
-
           Chef::Config.reset!
           Chef::Config[:cache_type] = 'Memory'
           Chef::Config[:node_name] = nil
           Chef::Config[:solo] = true
           Chef::Config[:cookbook_path] = File.dirname(@cookbook_path)
+        end
+
+        def metadata
+          cookbook.metadata
         end
 
         def recipes
