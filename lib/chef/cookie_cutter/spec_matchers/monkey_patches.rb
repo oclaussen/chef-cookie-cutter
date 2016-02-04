@@ -1,6 +1,6 @@
 # encoding: UTF-8
 #
-# Copyright 2015, Ole Claussen <claussen.ole@gmail.com>
+# Copyright 2016, Ole Claussen <claussen.ole@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.

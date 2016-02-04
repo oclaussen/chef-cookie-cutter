@@ -218,7 +218,7 @@ License & Authors
 - Author: Ole Claussen (claussen.ole@gmail.com)
 
 ```text
-Copyright 2015 Ole Claussen
+Copyright 2016 Ole Claussen
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
