@@ -1,6 +1,8 @@
 AllCops:
   DisplayCopNames: true
   DisplayStyleGuide: true
+  Exclude:
+    - 'files/default/vendor/**/*'
 
 Style/Documentation:
   Enabled: false

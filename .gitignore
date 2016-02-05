@@ -3,3 +3,4 @@ bin/
 .bundle/
 bundle/
 *.gem
+files/default/vendor
