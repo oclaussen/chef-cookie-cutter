@@ -103,14 +103,6 @@ end
 
 Allows custom resources to mixin other resources.
 
-##### Cookbook Doc integration
-
-Mixins integrate with [knife cookbook doc](https://github.com/realityforge/knife-cookbook-doc).
-A mixin resource can be annotated with `@mixin`. This will exclude the resource
-from `DocumentReadmeModel.resources`, and offer a new `DocumentReadmeModel.mixin_resources`
-which returns only the annotated resources. Mixin resources will not be documented
-unless a custom README template is used to include these resources.
-
 ##### Example
 
 ```ruby
@@ -159,13 +151,6 @@ be built based on these, and assigned to the property value.
 `:coerce_resource`. It will be called *after* the `:coerce_class` or
 `:coerce_resource` block and the object or resource instance is passed to the
 `:coerce` block.
-
-##### Cookbook Doc integration
-
-Fancy properties integrate with [knife cookbook doc](https://github.com/realityforge/knife-cookbook-doc).
-Properties are recognized by as well as attributes for documentation. If that
-property is a fancy property, `:collect` and `:coerce_resource` options are
-automatically detected and documented.
 
 ##### Examples
 

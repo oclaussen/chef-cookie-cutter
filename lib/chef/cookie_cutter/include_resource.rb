@@ -21,19 +21,10 @@ class Chef
     module IncludeResource
       require 'chef/cookie_cutter/include_resource/dsl'
       require 'chef/cookie_cutter/include_resource/monkey_patches'
-      require 'chef/cookie_cutter/include_resource/cookbook_doc'
       require 'chef/cookie_cutter/include_resource/fake_resource'
 
       Chef::Resource::LWRPBase.send :extend, DSL
       Chef::Resource::LWRPBase.send :prepend, MonkeyPatches::CustomResource
-      if defined?(DocumentingLWRPBase)
-        DocumentingLWRPBase.send :extend, CookbookDocDSL
-        DocumentingLWRPBase.send :extend, FakeResource
-      end
-      if defined?(KnifeCookbookDoc)
-        KnifeCookbookDoc::ReadmeModel.send :prepend, MonkeyPatches::DocumentReadmeModel
-        KnifeCookbookDoc::ResourceModel.send :prepend, MonkeyPatches::DocumentResourceModel
-      end
     end
   end
 end
