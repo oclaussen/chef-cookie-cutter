@@ -17,13 +17,11 @@
 require 'chef/property'
 
 class Chef
-  # Define Chef::Property in case we are pre 12.5 and it doesn't exist yet.
-  class Property
-  end
-
   module CookieCutter
-    module FancyPropertyModule
+    module FancyProperty
       require 'chef/cookie_cutter/fancy_property/property_dsl'
+
+      ::Chef::Property.send :prepend, PropertyDSL
     end
   end
 end
