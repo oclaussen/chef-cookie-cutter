@@ -64,8 +64,14 @@ class Chef
         end
 
         def coerce_class(clazz, *args, **kwargs, &blk)
+          if clazz.is_a?(Proc)
+            target = Class.new
+            target.class_eval(&clazz)
+          else
+            target = clazz
+          end
           args << kwargs unless kwargs.empty?
-          value = clazz.new(*args)
+          value = target.new(*args)
           value.instance_eval(&blk) if block_given?
           value
         end
@@ -126,7 +132,7 @@ class Chef
         def allow_kwargs?
           return true if options[:allow_kwargs]
           return true if options.key?(:coerce) && options[:coerce].arity != 1
-          return true if options.key?(:coerce_class) && options[:coerce_class].instance_method(:initialize).arity != 1
+          return true if options.key?(:coerce_class)
           false
         end
 
