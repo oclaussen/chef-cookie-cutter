@@ -39,7 +39,6 @@ class Chef
         try_file(filename)
         resource_module = Module.new
         resource_module.instance_variable_set('@filename', filename)
-        # rubocop:disable Lint/NestedMethodDefinition
         def resource_module.included(cls)
           cls.class_eval(IO.read(@filename), @filename, 1)
         end
