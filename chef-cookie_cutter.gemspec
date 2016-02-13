@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.files         = Dir['lib/**/*.{rb,erb}']
   spec.require_paths = ['lib']
 
-  spec.add_development_dependency 'bundler', '~> 1.10'
+  spec.add_development_dependency 'bundler', '~> 1.7'
   spec.add_development_dependency 'rake', '~> 10.5'
   spec.add_development_dependency 'rubocop', '~> 0.37'
   spec.add_development_dependency 'rspec', '~> 3.4'
