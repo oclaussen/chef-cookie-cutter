@@ -19,22 +19,24 @@
 class Chef
   module CookieCutter
     module IncludeProperties
-      module Errors
-        class SharedPropertiesAlreadyDefined < StandardError
-          def initialize(name)
-            super <<-EOH
-A shared property set with the name #{name} already exists. Please make sure that
-every shared property set you define has a unique name.
-EOH
-          end
-        end
-
+      module ResourceDSL
         class SharedPropertiesNotDefined < StandardError
           def initialize(name)
             super <<-EOH
 A property set with the name #{name} has not been shared.
 EOH
           end
+        end
+
+        def properties_shared?(name)
+          exist_state?(:cookie_cutter, :shared_properties, name)
+        end
+
+        def include_properties(name, *args, **kwargs)
+          raise SharedPropertiesNotDefined, name unless properties_shared? name
+          block = fetch_state(:cookie_cutter, :shared_properties, name)
+          args << kwargs unless kwargs.empty?
+          instance_exec(*args, &block)
         end
       end
     end

@@ -17,18 +17,16 @@
 #
 require 'chef/recipe'
 require 'chef/resource'
-require 'chef/provider'
 require 'chef/cookie_cutter/run_state'
 
 class Chef
   module CookieCutter
     module IncludeProperties
-      require 'chef/cookie_cutter/include_properties/dsl'
-      require 'chef/cookie_cutter/include_properties/errors'
+      require 'chef/cookie_cutter/include_properties/recipe_dsl'
+      require 'chef/cookie_cutter/include_properties/resource_dsl'
 
-      ::Chef::Recipe.send :include, DSL
-      ::Chef::Resource.send :include, DSL
-      ::Chef::Provider.send :include, DSL
+      ::Chef::Recipe.send :include, RecipeDSL
+      ::Chef::Resource.send :include, ResourceDSL
     end
   end
 end

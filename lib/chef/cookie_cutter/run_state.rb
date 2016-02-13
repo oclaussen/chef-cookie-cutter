@@ -17,7 +17,6 @@
 #
 require 'chef/recipe'
 require 'chef/resource'
-require 'chef/provider'
 
 class Chef
   module CookieCutter
@@ -27,7 +26,6 @@ class Chef
 
       ::Chef::Recipe.send :include, DSL
       ::Chef::Resource.send :include, DSL
-      ::Chef::Provider.send :include, DSL
     end
   end
 end
