@@ -45,6 +45,7 @@ class Chef
         resource_module
       end
 
+      # @!visibility private
       module DSL
         def include_resource(name, cookbook: nil)
           cookbook = resource_cookbook_name if cookbook.nil?

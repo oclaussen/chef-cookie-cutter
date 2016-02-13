@@ -19,6 +19,7 @@
 class Chef
   module CookieCutter
     module SpecMatchers
+      # @!visibility private
       module MonkeyPatches
         # Monkey Patches for Chef::Resource::LWRPBase
         # Automatically registers chef spec matchers after building the resource

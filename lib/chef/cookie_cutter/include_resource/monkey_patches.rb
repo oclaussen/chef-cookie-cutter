@@ -19,6 +19,7 @@
 class Chef
   module CookieCutter
     module IncludeResource
+      # @!visibility private
       module MonkeyPatches
         # Monkey Patches for Chef::Resource::LWRPBase
         # Makes the parameters of build_from_file (i.e. cookbook_name, filename

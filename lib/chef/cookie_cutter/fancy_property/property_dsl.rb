@@ -19,6 +19,7 @@
 class Chef
   module CookieCutter
     module FancyProperty
+      # @!visibility private
       module PropertyDSL
         def call(resource, *args, **kwargs, &blk)
           return get(resource) if args.empty? && kwargs.empty? && !block_given?

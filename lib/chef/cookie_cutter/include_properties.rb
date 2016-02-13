@@ -21,6 +21,23 @@ require 'chef/cookie_cutter/run_state'
 
 class Chef
   module CookieCutter
+    ##
+    # Uses the run state to define blocks of properties that can be used
+    # repeatedly across recipes and resources.
+    #
+    ## Examples:
+    #
+    # ```ruby
+    # share_properties :foo do
+    #   content 'foo'
+    #   mode '0644'
+    # end
+    #
+    # file 'testfile' do
+    #   include_properties :foo
+    # end
+    # ```
+    ##
     module IncludeProperties
       require 'chef/cookie_cutter/include_properties/recipe_dsl'
       require 'chef/cookie_cutter/include_properties/resource_dsl'

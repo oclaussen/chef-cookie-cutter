@@ -20,6 +20,7 @@ require 'chef/cookie_cutter/namespace/namespace'
 class Chef
   module CookieCutter
     module Namespace
+      # @!visibility private
       module MonkeyPatches
         module Node
           def namespace(*args, **kwargs, &blk)

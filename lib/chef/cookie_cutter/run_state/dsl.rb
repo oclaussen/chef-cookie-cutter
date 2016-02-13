@@ -20,6 +20,7 @@ require 'chef/cookie_cutter/run_state/errors'
 class Chef
   module CookieCutter
     module RunState
+      # @!visibility private
       module DSL
         def store_state(*subkeys, key, value)
           subkeys.map!(&:to_s)

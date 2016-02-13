@@ -19,6 +19,31 @@ require 'chef/resource/lwrp_base'
 
 class Chef
   module CookieCutter
+    ##
+    # Allows custom resources to mixin other resources.
+    #
+    ## Examples:
+    #
+    # ```ruby
+    # # File my_cookbook/resources/mixins/common.rb
+    # attribute :foo, kind_of: String, default: 'foo'
+    # ```
+    #
+    # ```ruby
+    # # File my_other_cookbook/resources/test.rb
+    # include_resource 'mixin/common', cookbook: 'my_cookbook'
+    #
+    # attribute :bar, kind_of: String, default: 'bar'
+    # ```
+    #
+    # ```ruby
+    # # File my_other_cookbook/recipes/test.rb
+    # my_cookbook_test 'test' do
+    #   foo 'Hello'
+    #   bar 'World'
+    # end
+    # ```
+    ##
     module IncludeResource
       require 'chef/cookie_cutter/include_resource/dsl'
       require 'chef/cookie_cutter/include_resource/monkey_patches'

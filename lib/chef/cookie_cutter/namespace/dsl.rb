@@ -20,6 +20,7 @@ require 'chef/cookie_cutter/namespace/namespace'
 class Chef
   module CookieCutter
     module Namespace
+      # @!visibility private
       module DSL
         def namespace(*args)
           keys = args.map(&:to_s)

@@ -21,6 +21,7 @@ class Chef
     module Namespace
       module_function
 
+      # @!visibility private
       class AttributeDoesNotExistError < StandardError
         def initialize(keys, key)
           super <<-EOH

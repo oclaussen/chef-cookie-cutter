@@ -22,6 +22,28 @@ require 'chef/node'
 
 class Chef
   module CookieCutter
+    ##
+    # Defines attribute namespaces, exactly like in
+    # [Chef Sugar](https://github.com/sethvargo/chef-sugar).
+    #
+    ## Examples:
+    #
+    # ```ruby
+    # # File my_cookbook/attributes/test.rb
+    # namespace 'my_cookbook', 'test' do
+    #   foo 'bar'
+    # end
+    # ```
+    #
+    # ```ruby
+    # # File my_cookbook/recipes/test.rb
+    # namespace 'my_cookbook', 'test' do |test|
+    #   file 'testfile' do
+    #     content test['foo']
+    #   end
+    # end
+    # ```
+    ##
     module Namespace
       require 'chef/cookie_cutter/namespace/dsl'
       require 'chef/cookie_cutter/namespace/monkey_patches'

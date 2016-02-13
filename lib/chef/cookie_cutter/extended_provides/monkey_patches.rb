@@ -19,6 +19,7 @@
 class Chef
   module CookieCutter
     module ExtendedProvides
+      # @!visibility private
       module MonkeyPatches
         module RunContext
           attr_reader :resource_builder

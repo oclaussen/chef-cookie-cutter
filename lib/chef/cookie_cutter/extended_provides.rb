@@ -20,6 +20,20 @@ require 'chef/resource_builder'
 
 class Chef
   module CookieCutter
+    ##
+    # Makes the `ResourceBuilder` that is used to resolve the current resource
+    # available in the run context. This way it can be read, for example, in the
+    # block parameter for `Resource.provides`.
+    #
+    ## Examples:
+    #
+    # ```ruby
+    # # File my_cookbook/resources/test.rb
+    # provides :fancy_resource_name do |node|
+    #   node.run_context.resource_builder.name =~ /test/
+    # end
+    # ```
+    ##
     module ExtendedProvides
       require 'chef/cookie_cutter/extended_provides/monkey_patches'
 

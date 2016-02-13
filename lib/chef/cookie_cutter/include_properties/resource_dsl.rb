@@ -19,6 +19,7 @@
 class Chef
   module CookieCutter
     module IncludeProperties
+      # @!visibility private
       module ResourceDSL
         class SharedPropertiesNotDefined < StandardError
           def initialize(name)

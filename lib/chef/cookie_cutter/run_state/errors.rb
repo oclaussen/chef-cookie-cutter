@@ -19,6 +19,7 @@
 class Chef
   module CookieCutter
     module RunState
+      # @!visibility private
       module Errors
         class RunStateDoesNotExistError < StandardError
           def initialize(keys, key)
