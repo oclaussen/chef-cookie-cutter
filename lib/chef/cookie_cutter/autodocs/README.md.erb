@@ -73,3 +73,17 @@
 <% end %>
 <% end %>
 <% end %>
+
+# License and Maintainer
+
+Maintainer:: <%= metadata.maintainer %> (<<%= metadata.maintainer_email %>>)
+<% unless metadata.source_url.empty? %>
+
+<%= 'Source:: ' + metadata.source_url %>
+<% end %>
+<% unless metadata.issues_url.empty? %>
+
+<%= 'Issues:: ' + metadata.issues_url %>
+<% end %>
+
+License:: <%= metadata.license %>
