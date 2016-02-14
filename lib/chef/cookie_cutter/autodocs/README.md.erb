@@ -13,10 +13,18 @@
 
 ## Cookbooks:
 
-<%= list(metadata.dependencies) %>
-<%= list(metadata.recommendations.map { |cookbook| "#{cookbook} (Recommended but not required)" }) %>
-<%= list(metadata.suggestions.map { |cookbook| "#{cookbook} (Suggested but not required)" }) %>
-<%= list(metadata.conflicting.map { |cookbook| "Conflicts with #{cookbook}" }) %>
+<% unless metadata.dependencies.empty? %>
+<%= list(metadata.dependencies.map { |cookbook, version| "#{cookbook} #{version}" }) %>
+<% end %>
+<% unless metadata.recommendations.empty? %>
+<%= list(metadata.recommendations.map { |cookbook, version| "#{cookbook} #{version} (Recommended but not required)" }) %>
+<% end %>
+<% unless metadata.suggestions.empty? %>
+<%= list(metadata.suggestions.map { |cookbook, version| "#{cookbook} #{version} (Suggested but not required)" }) %>
+<% end %>
+<% unless metadata.conflicting.empty? %>
+<%= list(metadata.conflicting.map { |cookbook, version| "Conflicts with #{cookbook} #{version}" }) %>
+<% end %>
 <% end %>
 <% unless recipes.empty? %>
 

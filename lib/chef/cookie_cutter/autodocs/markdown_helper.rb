@@ -31,7 +31,7 @@ class Chef
         def segment_toc(items)
           items = items.map do |item|
             text = item.respond_to?(:name) ? item.name : item.to_s
-            return text unless item.respond_to?(:short_description) && !item.short_description.empty?
+            next text unless item.respond_to?(:short_description) && !item.short_description.empty?
             "#{link text} - #{item.short_description}"
           end
           list items

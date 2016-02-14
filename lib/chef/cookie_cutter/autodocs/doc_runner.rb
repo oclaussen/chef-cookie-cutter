@@ -45,16 +45,18 @@ class Chef
         def recipes
           return @recipes if @recipes
           @recipes = cookbook.recipe_filenames.map do |file|
+            next if File.basename(file, '.rb').start_with?('_')
             recipe = Chef::Recipe.new(cookbook.name, File.basename(file, '.rb'), run_context)
             recipe.from_file(file)
             recipe
-          end
+          end.compact
           @recipes
         end
 
         def resources
           return @resources if @resources
           @resources = cookbook.resource_filenames.map do |file|
+            next if File.basename(file, '.rb').start_with?('_')
             resource_class = Class.new(Chef::Resource::LWRPBase)
             cookbook_name = cookbook.name
             resource_class.define_singleton_method(:resource_cookbook_name) { cookbook_name }
@@ -63,7 +65,7 @@ class Chef
             raise IOError, "Cannot open or read #{file}!" unless File.exist?(file) && File.readable?(file)
             resource_class.class_eval(IO.read(file), file, 1)
             resource_class
-          end
+          end.compact
           @resources
         end
 
