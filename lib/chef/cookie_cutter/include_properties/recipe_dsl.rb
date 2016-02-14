@@ -21,21 +21,15 @@ class Chef
     module IncludeProperties
       # @!visibility private
       module RecipeDSL
-        class SharedPropertiesAlreadyDefined < StandardError
-          def initialize(name)
-            super <<-EOH
-A shared property set with the name #{name} already exists. Please make sure that
-every shared property set you define has a unique name.
-EOH
-          end
-        end
-
         def properties_shared?(name)
           exist_state?(:cookie_cutter, :shared_properties, name)
         end
 
         def share_properties(name, &block)
-          raise SharedPropertiesAlreadyDefined, name if properties_shared? name
+          Chef::Log.warn <<-EOF if properties_shared? name
+A shared property set with the name #{name} already exists. Please make sure
+that every shared property set you define has a unique name.
+EOF
           store_state(:cookie_cutter, :shared_properties, name, block)
         end
       end
