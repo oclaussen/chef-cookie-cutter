@@ -28,6 +28,13 @@ class Chef
           items.map { |item| "* #{item}" }.join "\n"
         end
 
+        def table(headers, items)
+          header = '|' + headers.join('|') + '|'
+          line = '|' + headers.map { |h| '-' * h.size }.join('|') + '|'
+          content = items.map { |parts| '|' + parts.join('|') + '|' }
+          ([header, line] + content).join "\n"
+        end
+
         def segment_toc(items)
           items = items.map do |item|
             text = item.respond_to?(:name) ? item.name : item.to_s
