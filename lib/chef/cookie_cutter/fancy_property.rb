@@ -66,9 +66,11 @@ class Chef
     # ```
     ##
     module FancyProperty
-      require 'chef/cookie_cutter/fancy_property/property_dsl'
+      require 'chef/cookie_cutter/fancy_property/collect'
+      require 'chef/cookie_cutter/fancy_property/coerce'
 
-      ::Chef::Property.send :prepend, PropertyDSL
+      ::Chef::Property.send :prepend, CollectDSL
+      ::Chef::Property.send :prepend, CoerceDSL
     end
   end
 end

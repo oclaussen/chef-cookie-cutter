@@ -20,19 +20,11 @@ class Chef
   module CookieCutter
     module FancyProperty
       # @!visibility private
-      module PropertyDSL
+      module CoerceDSL
         def call(resource, *args, **kwargs, &blk)
           return get(resource) if args.empty? && kwargs.empty? && !block_given?
           return get(resource) if args[0] == NOT_PASSED
           set(resource, *args, **kwargs, &blk)
-        end
-
-        def get(resource)
-          if instance_variable_name && collect? && !is_set?(resource)
-            []
-          else
-            super
-          end
         end
 
         def set(resource, *args, **kwargs, &blk)
@@ -127,10 +119,6 @@ class Chef
           end
         end
 
-        def collect?
-          options[:collect]
-        end
-
         def allow_kwargs?
           return true if options[:allow_kwargs]
           return true if options.key?(:coerce) && options[:coerce].arity != 1
@@ -139,18 +127,7 @@ class Chef
         end
 
         def validation_options
-          super.delete_if do |k, _|
-            [:collect, :allow_kwargs, :coerce_class, :coerce_resource].include?(k)
-          end
-        end
-
-        def set_value(resource, value)
-          if instance_variable_name && collect?
-            resource.instance_variable_set(instance_variable_name, []) unless is_set?(resource)
-            get_value(resource) << value
-          else
-            super
-          end
+          super.delete_if { |k, _| [:allow_kwargs, :coerce_class, :coerce_resource].include?(k) }
         end
       end
     end
