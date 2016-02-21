@@ -39,14 +39,17 @@ class Chef
 
         def coerce(resource, *args, **kwargs, &blk)
           if options.key?(:coerce_class)
+            raise Chef::Exceptions::CannotValidateStaticallyError unless resource
             value = coerce_class(options[:coerce_class], *args, **kwargs, &blk)
             value = coerce_proc(resource, options[:coerce], value) if options.key?(:coerce)
             value
           elsif options.key?(:coerce_resource)
+            raise Chef::Exceptions::CannotValidateStaticallyError unless resource
             value = coerce_resource(resource, options[:coerce_resource], args[0], &blk)
             value = coerce_proc(resource, options[:coerce], value) if options.key?(:coerce)
             value
           elsif options.key?(:coerce)
+            raise Chef::Exceptions::CannotValidateStaticallyError unless resource
             coerce_proc(resource, options[:coerce], *args, **kwargs, &blk)
           elsif args.empty?
             kwargs
