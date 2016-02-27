@@ -21,23 +21,18 @@ class Chef
     module IncludeProperties
       # @!visibility private
       module ResourceDSL
-        class SharedPropertiesNotDefined < StandardError
-          def initialize(name)
-            super <<-EOH
-A property set with the name #{name} has not been shared.
-EOH
+        def include_properties(name)
+          properties = run_context.shared_properties[name.to_sym]
+          return if properties.nil?
+          block = properties.block_for_resource(resource_name)
+          if block.nil?
+            block = properties.otherwise_block
+            instance_exec(&block) unless block.nil?
+          else
+            instance_exec(&block)
           end
-        end
-
-        def properties_shared?(name)
-          exist_state?(:cookie_cutter, :shared_properties, name)
-        end
-
-        def include_properties(name, *args, **kwargs)
-          raise SharedPropertiesNotDefined, name unless properties_shared? name
-          block = fetch_state(:cookie_cutter, :shared_properties, name)
-          args << kwargs unless kwargs.empty?
-          instance_exec(*args, &block)
+          block = properties.always_block
+          instance_exec(&block) unless block.nil?
         end
       end
     end

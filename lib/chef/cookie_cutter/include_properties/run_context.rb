@@ -20,17 +20,9 @@ class Chef
   module CookieCutter
     module IncludeProperties
       # @!visibility private
-      module RecipeDSL
-        def properties_shared?(name)
-          exist_state?(:cookie_cutter, :shared_properties, name)
-        end
-
-        def share_properties(name, &block)
-          Chef::Log.warn <<-EOF if properties_shared? name
-A shared property set with the name #{name} already exists. Please make sure
-that every shared property set you define has a unique name.
-EOF
-          store_state(:cookie_cutter, :shared_properties, name, block)
+      module RunContext
+        def shared_properties
+          @shared_properties ||= {}
         end
       end
     end

@@ -39,11 +39,13 @@ class Chef
     # ```
     ##
     module IncludeProperties
-      require 'chef/cookie_cutter/include_properties/recipe_dsl'
       require 'chef/cookie_cutter/include_properties/resource_dsl'
+      require 'chef/cookie_cutter/include_properties/run_context'
+      require 'chef/cookie_cutter/include_properties/cookbook_compiler'
 
-      ::Chef::Recipe.send :include, RecipeDSL
       ::Chef::Resource.send :include, ResourceDSL
+      ::Chef::RunContext.send :include, RunContext
+      ::Chef::RunContext::CookbookCompiler.send :prepend, CookbookCompiler
     end
   end
 end
