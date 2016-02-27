@@ -18,9 +18,9 @@
 
 class Chef
   module CookieCutter
-    module FancyProperty
+    module CollectProperty
       # @!visibility private
-      module CollectDSL
+      module PropertyDSL
         def get(resource)
           if instance_variable_name && collect? && !is_set?(resource)
             []

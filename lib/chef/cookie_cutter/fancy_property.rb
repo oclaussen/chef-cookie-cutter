@@ -28,9 +28,6 @@ class Chef
     # is option is automatically enabled when a `:coerce` or `:coerce_class`
     # block with higher arity is given. It can be enforced by passing the
     # `:allow_kwargs` parameter.
-    # * Adds new validation parameter `:collect`. If set to `true`, the property
-    # can be called multiple times on a resource, and all values will be
-    # collected in an array.
     # * Adds new validation parameter `:coerce_class`, which takes a class name.
     # The arguments given to the property will be passed to the constructor of
     # the given class, and the value will be set to the resulting instance.
@@ -53,24 +50,20 @@ class Chef
     #   end
     # end
     #
-    # property :foo, ::Chef::CookieCutter::FancyProperty,
-    #          collect: true, coerce_class: MySampleValueClass
+    # property :foo, coerce_class: MySampleValueClass
     # ```
     #
     # ```ruby
     # # File my_cookbook/recipes/test.rb
     # my_cookbook_test 'test' do
-    #   foo 'Hello'
     #   foo 'World', true
     # end
     # ```
     ##
     module FancyProperty
-      require 'chef/cookie_cutter/fancy_property/collect'
-      require 'chef/cookie_cutter/fancy_property/coerce'
+      require 'chef/cookie_cutter/fancy_property/property_dsl'
 
-      ::Chef::Property.send :prepend, CollectDSL
-      ::Chef::Property.send :prepend, CoerceDSL
+      ::Chef::Property.send :prepend, PropertyDSL
     end
   end
 end

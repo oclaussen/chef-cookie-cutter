@@ -15,20 +15,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+require 'chef/property'
 
 class Chef
-  ##
-  # Cookie Cutter is a collection of hacks and monkey patches for Chef.
-  #
   module CookieCutter
-    require 'chef/cookie_cutter/autodocs'
-    require 'chef/cookie_cutter/collect_property'
-    require 'chef/cookie_cutter/extended_provides'
-    require 'chef/cookie_cutter/fancy_property'
-    require 'chef/cookie_cutter/include_resource'
-    require 'chef/cookie_cutter/run_state'
-    require 'chef/cookie_cutter/shared_properties'
-    require 'chef/cookie_cutter/spec_matchers'
-    require 'chef/cookie_cutter/version'
+    ##
+    # Adds new validation parameter `:collect` to properties. If set to `true`,
+    # the property can be called multiple times on a resource, and all values
+    # will be collected in an array.
+    #
+    ## Examples:
+    #
+    # ```ruby
+    # # File my_cookbook/resources/test.rb
+    #
+    # property :foo, collect: true
+    # ```
+    #
+    # ```ruby
+    # # File my_cookbook/recipes/test.rb
+    # my_cookbook_test 'test' do
+    #   foo 'Hello'
+    #   foo 'World'
+    # end
+    # ```
+    ##
+    module CollectProperty
+      require 'chef/cookie_cutter/collect_property/property_dsl'
+      ::Chef::Property.send :prepend, PropertyDSL
+    end
   end
 end
