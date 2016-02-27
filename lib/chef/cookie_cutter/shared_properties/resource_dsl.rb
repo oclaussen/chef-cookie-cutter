@@ -18,11 +18,21 @@
 
 class Chef
   module CookieCutter
-    module IncludeProperties
+    module SharedProperties
       # @!visibility private
-      module RunContext
-        def shared_properties
-          @shared_properties ||= {}
+      module ResourceDSL
+        def include_properties(name)
+          properties = run_context.shared_properties[name.to_sym]
+          return if properties.nil?
+          block = properties.block_for_resource(resource_name)
+          if block.nil?
+            block = properties.otherwise_block
+            instance_exec(&block) unless block.nil?
+          else
+            instance_exec(&block)
+          end
+          block = properties.always_block
+          instance_exec(&block) unless block.nil?
         end
       end
     end

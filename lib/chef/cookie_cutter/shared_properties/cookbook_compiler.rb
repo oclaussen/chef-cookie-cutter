@@ -16,11 +16,11 @@
 # limitations under the License.
 #
 
-require 'chef/cookie_cutter/include_properties/shared_properties'
+require 'chef/cookie_cutter/shared_properties/shared_properties'
 
 class Chef
   module CookieCutter
-    module IncludeProperties
+    module SharedProperties
       # @!visibility private
       module CookbookCompiler
         def compile
@@ -59,7 +59,7 @@ class Chef
 
         def load_shared_properties(cookbook_name, filename)
           Chef::Log.debug("Loading cookbook #{cookbook_name}'s shared properties from #{filename}")
-          properties = Chef::CookieCutter::IncludeProperties::SharedProperties.build_from_file(cookbook_name, filename)
+          properties = Chef::CookieCutter::SharedProperties::SharedProperties.build_from_file(cookbook_name, filename)
           @run_context.shared_properties[properties.name] = properties
           #@events.shared_properties_loaded(filename)
         rescue Exception => e

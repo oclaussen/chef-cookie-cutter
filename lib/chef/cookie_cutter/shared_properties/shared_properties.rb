@@ -18,7 +18,7 @@
 
 class Chef
   module CookieCutter
-    module IncludeProperties
+    module SharedProperties
       # @!visibility private
       class SharedProperties
         include Chef::Mixin::FromFile

@@ -38,10 +38,10 @@ class Chef
     # end
     # ```
     ##
-    module IncludeProperties
-      require 'chef/cookie_cutter/include_properties/resource_dsl'
-      require 'chef/cookie_cutter/include_properties/run_context'
-      require 'chef/cookie_cutter/include_properties/cookbook_compiler'
+    module SharedProperties
+      require 'chef/cookie_cutter/shared_properties/resource_dsl'
+      require 'chef/cookie_cutter/shared_properties/run_context'
+      require 'chef/cookie_cutter/shared_properties/cookbook_compiler'
 
       ::Chef::Resource.send :include, ResourceDSL
       ::Chef::RunContext.send :include, RunContext
