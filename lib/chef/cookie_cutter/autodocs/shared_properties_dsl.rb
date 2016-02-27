@@ -15,24 +15,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-require 'chef/property'
-require 'chef/recipe'
-require 'chef/resource/lwrp_base'
 
 class Chef
   module CookieCutter
     module Autodocs
-      require 'chef/cookie_cutter/autodocs/property_dsl'
-      require 'chef/cookie_cutter/autodocs/recipe_dsl'
-      require 'chef/cookie_cutter/autodocs/resource_dsl'
-      require 'chef/cookie_cutter/autodocs/shared_properties_dsl'
+      module SharedPropertiesDSL
+        def description(text = nil)
+          @description = text unless text.nil?
+          return @description unless @description.nil?
+          ''
+        end
 
-      ::Chef::Property.send :prepend, PropertyDSL
-      ::Chef::Recipe.send :include, RecipeDSL
-      ::Chef::Resource::LWRPBase.send :include, ResourceDSL
-
-      if defined?(CookieCutter::SharedProperties)
-        CookieCutter::SharedProperties::SharedProperties.send :include, SharedPropertiesDSL
+        def short_description
+          match = Regexp.new('^(.*?\.(\z|\s))', Regexp::MULTILINE).match(description)
+          return description if match.nil?
+          match[1].tr("\n", ' ').strip
+        end
       end
     end
   end

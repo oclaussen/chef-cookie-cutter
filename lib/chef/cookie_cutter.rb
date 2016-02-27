@@ -21,14 +21,16 @@ class Chef
   # Cookie Cutter is a collection of hacks and monkey patches for Chef.
   #
   module CookieCutter
-    require 'chef/cookie_cutter/autodocs'
+    require 'chef/cookie_cutter/version'
+
     require 'chef/cookie_cutter/collect_property'
     require 'chef/cookie_cutter/extended_provides'
     require 'chef/cookie_cutter/fancy_property'
     require 'chef/cookie_cutter/include_resource'
     require 'chef/cookie_cutter/run_state'
     require 'chef/cookie_cutter/shared_properties'
+
+    require 'chef/cookie_cutter/autodocs'
     require 'chef/cookie_cutter/spec_matchers'
-    require 'chef/cookie_cutter/version'
   end
 end
