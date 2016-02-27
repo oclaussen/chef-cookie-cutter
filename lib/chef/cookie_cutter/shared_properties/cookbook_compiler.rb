@@ -33,11 +33,11 @@ class Chef
         end
 
         def compile_shared_properties
-          #@events.shared_properties_load_start(count_files_by_segment(:shared_properties))
+          # @events.shared_properties_load_start(count_files_by_segment(:shared_properties))
           cookbook_order.each do |cookbook|
             load_shared_properties_from_cookbook(cookbook)
           end
-          #@events.shared_properties_load_complete
+          # @events.shared_properties_load_complete
         end
 
         def load_shared_properties_from_cookbook(cookbook_name)
@@ -61,9 +61,9 @@ class Chef
           Chef::Log.debug("Loading cookbook #{cookbook_name}'s shared properties from #{filename}")
           properties = Chef::CookieCutter::SharedProperties::SharedProperties.build_from_file(cookbook_name, filename)
           @run_context.shared_properties[properties.name] = properties
-          #@events.shared_properties_loaded(filename)
-        rescue Exception => e
-          #@events.shared_properties_load_failed(filename, e)
+          # @events.shared_properties_loaded(filename)
+        rescue
+          # @events.shared_properties_load_failed(filename, e)
           raise
         end
       end

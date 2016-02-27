@@ -53,10 +53,10 @@ class Chef
         end
 
         def otherwise(&blk)
-          @otherwise_block = block
+          @otherwise_block = blk
         end
 
-        def in_resource_named(name, &blk)
+        def in_resource(name, &blk)
           @blocks[name.to_sym] = blk
         end
 
