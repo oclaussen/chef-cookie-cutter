@@ -56,8 +56,10 @@ class Chef
           @otherwise_block = blk
         end
 
-        def in_resource(name, &blk)
-          @blocks[name.to_sym] = blk
+        def in_resource(*names, &blk)
+          names.each do |name|
+            @blocks[name.to_sym] = blk
+          end
         end
 
         def block_for_resource(resource_name)
