@@ -21,13 +21,16 @@ require 'chef/resource_builder'
 class Chef
   module CookieCutter
     ##
-    # Makes the `ResourceBuilder` that is used to resolve the current resource
-    # available in the run context. This way it can be read, for example, in the
-    # block parameter for `Resource.provides`.
+    # Adds a `:named` option to the `Resource.provides` DSL method. It can be
+    # passed either a String, Symbol or a Regexp. If given, the resource will
+    # provide a DSL name, if the name of the resource matches that argument.
     #
     # @example File my_cookbook/resources/test.rb
-    #   provides :fancy_resource_name do |node|
-    #     node.run_context.resource_builder.name =~ /test/
+    #   provides :fancy_resource_name, named: 'foo'
+    #
+    # @example File my_cookbook/recipes/test.rb
+    #   fancy_resource_name 'foo' do
+    #     ...
     #   end
     #
     module ProvidesNamed
