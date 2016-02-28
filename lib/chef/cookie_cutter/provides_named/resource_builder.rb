@@ -18,22 +18,12 @@
 
 class Chef
   module CookieCutter
-    module ExtendedProvides
+    module ProvidesNamed
       # @!visibility private
-      module MonkeyPatches
-        module RunContext
-          attr_reader :resource_builder
-
-          def build_resource(builder)
-            @resource_builder = builder
-          end
-        end
-
-        module ResourceBuilder
-          def build(&block)
-            run_context.build_resource(self)
-            super(&block)
-          end
+      module ResourceBuilder
+        def build(&block)
+          run_context.instance_variable_set :@resource_builder, self
+          super(&block)
         end
       end
     end

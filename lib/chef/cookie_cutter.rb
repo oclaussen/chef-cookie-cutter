@@ -24,9 +24,9 @@ class Chef
     require 'chef/cookie_cutter/version'
 
     require 'chef/cookie_cutter/collect_property'
-    require 'chef/cookie_cutter/extended_provides'
     require 'chef/cookie_cutter/fancy_property'
     require 'chef/cookie_cutter/include_resource'
+    require 'chef/cookie_cutter/provides_named'
     require 'chef/cookie_cutter/run_state'
     require 'chef/cookie_cutter/shared_properties'
 

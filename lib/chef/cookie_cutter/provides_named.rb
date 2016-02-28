@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-require 'chef/run_context'
+require 'chef/resource'
 require 'chef/resource_builder'
 
 class Chef
@@ -30,11 +30,12 @@ class Chef
     #     node.run_context.resource_builder.name =~ /test/
     #   end
     #
-    module ExtendedProvides
-      require 'chef/cookie_cutter/extended_provides/monkey_patches'
+    module ProvidesNamed
+      require 'chef/cookie_cutter/provides_named/resource'
+      require 'chef/cookie_cutter/provides_named/resource_builder'
 
-      ::Chef::RunContext.send :prepend, MonkeyPatches::RunContext
-      ::Chef::ResourceBuilder.send :prepend, MonkeyPatches::ResourceBuilder
+      ::Chef::Resource.send :prepend, CustomResource
+      ::Chef::ResourceBuilder.send :prepend, ResourceBuilder
     end
   end
 end
