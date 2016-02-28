@@ -19,29 +19,58 @@
 class Chef
   module CookieCutter
     module Autodocs
+      ##
+      # Extensions to the Chef resource DSL
+      #
       module ResourceDSL
+        ##
+        # Extensions of the Chef resource class DSL
+        #
         module ClassMethods
+          ##
+          # Get the name of the resource
+          #
+          # @return [String] the resource name
+          #
           def name
             resource_name
           end
 
+          ##
+          # Get or set a description for the resource.
+          #
+          # @param text [String] if given, will set the description of the resource to this text
+          # @return [String] the description of the resource
+          #
           def description(text = nil)
             @description = text unless text.nil?
             return @description unless @description.nil?
             ''
           end
 
+          ##
+          # Get a short description for the resource. The short description is
+          # simply the first full sentence of the normal #description.
+          #
+          # @return [String] the first sentence of the description
+          #
           def short_description
             match = Regexp.new('^(.*?\.(\z|\s))', Regexp::MULTILINE).match(description)
             return description if match.nil?
             match[1].tr("\n", ' ').strip
           end
 
+          ##
+          # Get the descriptions for actions on the resource.
+          #
+          # @return [Hash<Symbol, String>] the description set for the actions
+          #
           def action_descriptions
             @action_descriptions ||= {}
           end
         end
 
+        # @!visibility private
         module ClassMethodsMP
           def action(name, description = '', &blk)
             super(name, &blk)
@@ -58,6 +87,7 @@ class Chef
           end
         end
 
+        # @!visibility private
         def self.included(base)
           class << base
             include ClassMethods

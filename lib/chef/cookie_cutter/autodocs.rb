@@ -21,6 +21,14 @@ require 'chef/resource/lwrp_base'
 
 class Chef
   module CookieCutter
+    ##
+    # Extends most Chef DSLs to include additional metadata information. This
+    # information may be used, for example, to automatically generate
+    # documentation for your cookbook.
+    #
+    # This also includes a rake task to generate a README.md file with the
+    # provided metadata.
+    #
     module Autodocs
       require 'chef/cookie_cutter/autodocs/property_dsl'
       require 'chef/cookie_cutter/autodocs/recipe_dsl'

@@ -19,7 +19,19 @@
 class Chef
   module CookieCutter
     module Autodocs
+      ##
+      # Extensions to the Chef property DSL.
+      #
       module PropertyDSL
+        ##
+        # Get the description set for property. A description on the resource
+        # can be set initially by adding the new `:description` validation
+        # option. Will automatically add a description for `:default`,
+        # `:collect` and `:coerce_resource` validation options set on the
+        # property.
+        #
+        # @return [String] the description for the resource
+        #
         def description
           desc = ''
           desc = options[:description] if options.key?(:description)
@@ -34,6 +46,7 @@ class Chef
           desc
         end
 
+        # @!visibility private
         def validation_options
           super.delete_if do |k, _|
             [:description, :default_description].include? k

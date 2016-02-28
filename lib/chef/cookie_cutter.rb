@@ -16,6 +16,9 @@
 # limitations under the License.
 #
 
+##
+# The top level Chef class.
+#
 class Chef
   ##
   # Cookie Cutter is a collection of hacks and monkey patches for Chef.

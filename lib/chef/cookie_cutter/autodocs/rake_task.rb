@@ -24,6 +24,14 @@ require 'rake/tasklib'
 class Chef
   module CookieCutter
     module Autodocs
+      ##
+      # A rake task that creates a `README.md` file based on the metadata set by
+      # the autodocs module.
+      #
+      # @example Rakefile
+      #   require 'chef/cookie_cutter/autodocs/rake_task'
+      #   Chef::CookieCutter::Autodocs::RakeTask.new
+      #
       class RakeTask < ::Rake::TaskLib
         attr_accessor :name, :cookbook_path, :output_file, :template_file
 
