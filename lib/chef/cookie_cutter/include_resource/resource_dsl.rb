@@ -22,11 +22,15 @@ class Chef
     module IncludeResource
       module_function
 
+      ##
+      # @!visibility private
       def try_file(filename)
         return if File.exist?(filename) && File.readable?(filename)
         raise IOError, "Cannot open or read #{filename}"
       end
 
+      ##
+      # @!visibility private
       def filename_for_record(run_context, cookbook_name, segment, name)
         name += '.rb' unless name.end_with?('.rb')
         cookbook_version = run_context.cookbook_collection[cookbook_name]
@@ -35,6 +39,8 @@ class Chef
         file_vendor.get_filename(manifest_record[:path])
       end
 
+      ##
+      # @!visibility private
       def build_resource_module_from_file(filename)
         try_file(filename)
         resource_module = Module.new
@@ -45,8 +51,21 @@ class Chef
         resource_module
       end
 
-      # @!visibility private
-      module DSL
+      ##
+      # Extensions for the Chef custom resource DSL
+      #
+      module ResourceDSL
+        ##
+        # Include an existing resource into this resource. This works analogous
+        # to including a module into a ruby class. The name of the resource is a
+        # path relative to the resource directroy in the specified cookbook. For
+        # example if a file named `my_cookbook/resources/mixins/my_resource.rb`
+        # exists in the cookbook, it can be included with the name
+        # `mixins/my_resource`.
+        #
+        # @param name [String] name of the included resource
+        # @param cookbook [String] name of the cookbook containing the resource
+        #
         def include_resource(name, cookbook: nil)
           cookbook = resource_cookbook_name if cookbook.nil?
           filename = IncludeResource.filename_for_record(run_context, cookbook, :resources, name)

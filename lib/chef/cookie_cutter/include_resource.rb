@@ -37,11 +37,11 @@ class Chef
     #   end
     #
     module IncludeResource
-      require 'chef/cookie_cutter/include_resource/dsl'
-      require 'chef/cookie_cutter/include_resource/monkey_patches'
+      require 'chef/cookie_cutter/include_resource/resource_dsl'
+      require 'chef/cookie_cutter/include_resource/resource'
 
-      Chef::Resource::LWRPBase.send :extend, DSL
-      Chef::Resource::LWRPBase.send :prepend, MonkeyPatches::CustomResource
+      Chef::Resource::LWRPBase.send :extend, ResourceDSL
+      Chef::Resource::LWRPBase.send :prepend, CustomResource
     end
   end
 end
