@@ -38,6 +38,7 @@ class Chef
         attr_reader :name
         attr_reader :otherwise_block
         attr_reader :always_block
+        attr_reader :before_block
 
         def initialize(name)
           @name = name.to_sym
@@ -46,6 +47,10 @@ class Chef
 
         def share_as(name)
           @name = name
+        end
+
+        def before(&blk)
+          @before_block = blk
         end
 
         def always(&blk)

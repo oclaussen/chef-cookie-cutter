@@ -23,7 +23,12 @@ class Chef
       module ResourceDSL
         def include_properties(name)
           properties = run_context.shared_properties[name.to_sym]
-          return if properties.nil?
+          if properties.nil?
+            Chef::Log.warn("No shared properties with name #{name} exist")
+            return
+          end
+          block = properties.before_block
+          instance_exec(&block) unless block.nil?
           block = properties.block_for_resource(resource_name)
           if block.nil?
             block = properties.otherwise_block
