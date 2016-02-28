@@ -1,1 +1,1 @@
--m markdown
+-m markdown --no-private lib/**/*.rb - README.md LICENSE
