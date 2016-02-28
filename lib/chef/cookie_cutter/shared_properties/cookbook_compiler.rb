@@ -64,7 +64,7 @@ class Chef
         def load_shared_properties(cookbook_name, filename)
           Chef::Log.debug("Loading cookbook #{cookbook_name}'s shared properties from #{filename}")
           properties = Chef::CookieCutter::SharedProperties::SharedProperties.build_from_file(cookbook_name, filename)
-          @run_context.shared_properties[properties.name] = properties
+          @run_context.shared_properties[properties.name.to_sym] = properties
           # @events.shared_properties_loaded(filename)
         rescue
           # @events.shared_properties_load_failed(filename, e)

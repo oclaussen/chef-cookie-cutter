@@ -20,14 +20,27 @@ class Chef
   module CookieCutter
     module SharedProperties
       # @!visibility private
-      module ResourceDSL
-        def include_properties(name)
-          properties = run_context.shared_properties[name.to_sym]
-          if properties.nil?
-            Chef::Log.warn("No shared properties with name #{name} exist")
-            return
+      module SharedPropertiesDSL
+        def share_as(properties_name)
+          self.name = properties_name
+        end
+
+        def before(&blk)
+          self.before_block = blk
+        end
+
+        def always(&blk)
+          self.always_block = blk
+        end
+
+        def otherwise(&blk)
+          self.otherwise_block = blk
+        end
+
+        def in_resource(*names, &blk)
+          names.each do |name|
+            self.blocks[name.to_sym] = blk
           end
-          properties.eval_on_resource(self)
         end
       end
     end
