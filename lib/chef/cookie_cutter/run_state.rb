@@ -36,11 +36,10 @@ class Chef
     # ```
     ##
     module RunState
-      require 'chef/cookie_cutter/run_state/dsl'
-      require 'chef/cookie_cutter/run_state/errors'
+      require 'chef/cookie_cutter/run_state/recipe_dsl'
 
-      ::Chef::Recipe.send :include, DSL
-      ::Chef::Resource.send :include, DSL
+      ::Chef::Recipe.send :include, RecipeDSL
+      ::Chef::Resource.send :include, RecipeDSL
     end
   end
 end

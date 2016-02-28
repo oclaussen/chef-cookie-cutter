@@ -20,15 +20,41 @@ class Chef
   module CookieCutter
     module RunState
       # @!visibility private
-      module Errors
-        class RunStateDoesNotExistError < StandardError
-          def initialize(keys, key)
-            hash = keys.map { |k| "['#{k}']" }
-            super <<-EOH
+      class RunStateDoesNotExistError < StandardError
+        def initialize(keys, key)
+          hash = keys.map { |k| "['#{k}']" }
+          super <<-EOH
 The run_state does not contain an element at run_state#{hash.join}.
 Specifically, #{key} is not defined.
 EOH
+        end
+      end
+
+      # @!visibility private
+      module RecipeDSL
+        def store_state(*subkeys, key, value)
+          subkeys.map!(&:to_s)
+          hash = node.run_state
+          subkeys.each do |k|
+            hash[k] = {} if hash[k].nil?
+            hash = hash[k]
           end
+          hash[key.to_s] = value
+        end
+
+        def fetch_state(*keys)
+          keys.map!(&:to_s)
+          keys.inject(node.run_state) do |hash, key|
+            raise RunStateDoesNotExistError.new(keys, key) unless hash.key? key
+            hash[key]
+          end
+        end
+
+        def exist_state?(*keys)
+          fetch_state(*keys)
+          true
+        rescue RunStateDoesNotExistError
+          false
         end
       end
     end
