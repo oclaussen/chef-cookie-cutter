@@ -24,23 +24,15 @@ class Chef
     # their `resource_name` and all actions. Custom `provide` declarations are
     # not considered for matchers.
     #
-    ## Examples:
+    # @example File my_cookbook/resources/test.rb
+    #   resource_name :test
     #
-    # ```ruby
-    # # File my_cookbook/resources/test.rb
+    #   allowed_actions [:create, :delete]
     #
-    # resource_name :test
+    # @example File my_cookbook
+    #   expect(chef_run).to create_test('foo')
+    #   expect(chef_run).to delete_test('bar')
     #
-    # allowed_actions [:create, :delete]
-    # ```
-    #
-    # ```ruby
-    # # File my_cookbook
-    #
-    # expect(chef_run).to create_test('foo')
-    # expect(chef_run).to delete_test('bar')
-    # ```
-    ##
     module SpecMatchers
       require 'chef/cookie_cutter/spec_matchers/monkey_patches'
 

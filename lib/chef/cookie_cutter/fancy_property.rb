@@ -39,27 +39,20 @@ class Chef
     # `:coerce_class` or `:coerce_resource` block and the object or resource
     # instance is passed to the `:coerce` block.
     #
-    ## Examples:
-    #
-    # ```ruby
-    # # File my_cookbook/resources/test.rb
-    #
-    # class MySampleValueClass
-    #   def initialize(foo, bar: false)
-    #     @foo = foo
+    # @example File my_cookbook/resources/test.rb
+    #   class MySampleValueClass
+    #     def initialize(foo, bar: false)
+    #       @foo = foo
+    #     end
     #   end
-    # end
     #
-    # property :foo, coerce_class: MySampleValueClass
-    # ```
+    #   property :foo, coerce_class: MySampleValueClass
     #
-    # ```ruby
-    # # File my_cookbook/recipes/test.rb
-    # my_cookbook_test 'test' do
-    #   foo 'World', true
-    # end
-    # ```
-    ##
+    # @example File my_cookbook/recipes/test.rb
+    #   my_cookbook_test 'test' do
+    #     foo 'World', true
+    #   end
+    #
     module FancyProperty
       require 'chef/cookie_cutter/fancy_property/property_dsl'
 

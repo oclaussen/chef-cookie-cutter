@@ -25,15 +25,11 @@ class Chef
     # available in the run context. This way it can be read, for example, in the
     # block parameter for `Resource.provides`.
     #
-    ## Examples:
+    # @example File my_cookbook/resources/test.rb
+    #   provides :fancy_resource_name do |node|
+    #     node.run_context.resource_builder.name =~ /test/
+    #   end
     #
-    # ```ruby
-    # # File my_cookbook/resources/test.rb
-    # provides :fancy_resource_name do |node|
-    #   node.run_context.resource_builder.name =~ /test/
-    # end
-    # ```
-    ##
     module ExtendedProvides
       require 'chef/cookie_cutter/extended_provides/monkey_patches'
 
