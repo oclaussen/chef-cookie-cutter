@@ -39,7 +39,7 @@ class Chef
 
         def in_resource(*names, &blk)
           names.each do |name|
-            self.blocks[name.to_sym] = blk
+            blocks[name.to_sym] = blk
           end
         end
       end
