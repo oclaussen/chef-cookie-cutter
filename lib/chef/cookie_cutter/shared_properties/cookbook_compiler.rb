@@ -23,13 +23,17 @@ class Chef
     module SharedProperties
       # @!visibility private
       module CookbookCompiler
-        def compile
-          compile_libraries
-          compile_attributes
+        # Here we monkey patch #compile_recipes to compile the shared properties
+        # before. The reason why we don't monkey patch #compile instead is the
+        # following:
+        # This gem will be required in a chef library, i.e. this very monkey
+        # patch is executed in the #compile_libraries phase, which is the first
+        # step in #compile. It is too late then, to monkey patch the #compile
+        # method. However, patching any method that is called *after*
+        # #compile_libraries will work fine.
+        def compile_recipes
           compile_shared_properties
-          compile_lwrps
-          compile_resource_definitions
-          compile_recipes
+          super
         end
 
         def compile_shared_properties
