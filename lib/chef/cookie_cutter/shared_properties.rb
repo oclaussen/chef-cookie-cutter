@@ -16,8 +16,8 @@
 # limitations under the License.
 #
 require 'chef/recipe'
-require 'chef/resource'
-require 'chef/cookie_cutter/run_state'
+require 'chef/run_context'
+require 'chef/run_context/cookbook_compiler'
 
 class Chef
   module CookieCutter
