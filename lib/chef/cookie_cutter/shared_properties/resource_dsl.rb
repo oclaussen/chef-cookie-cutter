@@ -19,8 +19,14 @@
 class Chef
   module CookieCutter
     module SharedProperties
-      # @!visibility private
+      ##
+      # Extensions to the Chef resource DSL.
+      #
       module ResourceDSL
+        ##
+        # Evaluate a set of properties on the resource.
+        # @param name [String, Symbol] The name of a shared property set
+        #
         def include_properties(name)
           properties = run_context.shared_properties[name.to_sym]
           if properties.nil?

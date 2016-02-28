@@ -22,22 +22,39 @@ require 'chef/cookie_cutter/run_state'
 class Chef
   module CookieCutter
     ##
-    # Uses the run state to define blocks of properties that can be used
-    # repeatedly across recipes and resources.
+    # Adds a new type of files with their own DSL to Chef cookbooks, named
+    # "shared properties". These shared properties allow for the definition of
+    # common properties, that should be shared across many resources, or across
+    # cookbooks.
     #
-    ## Examples:
+    # Currently, these files are housed in the cookbook under `:files` segment,
+    # more precisely under `files/default/shared_properties`.
     #
-    # ```ruby
-    # share_properties :foo do
-    #   content 'foo'
-    #   mode '0644'
-    # end
+    # @example File my_cookbook/files/default/shared_properties/permissions.rb
+    #   share_as :common_file_permissions
     #
-    # file 'testfile' do
-    #   include_properties :foo
-    # end
-    # ```
-    ##
+    #   always do
+    #     owner 'testuser'
+    #     group 'testgroup'
+    #   end
+    #
+    #   in_resource :file do
+    #     mode '0644'
+    #   end
+    #
+    #   in_resource :directory do
+    #     mode '0755'
+    #   end
+    #
+    # @example File my_cookbook/recipes/test.rb
+    #   file 'testfile' do
+    #     include_properties :common_file_permissions
+    #   end
+    #
+    #   directory 'testdir' do
+    #     include_properties :common_file_permissions
+    #   end
+    #
     module SharedProperties
       require 'chef/cookie_cutter/shared_properties/resource_dsl'
       require 'chef/cookie_cutter/shared_properties/run_context'
