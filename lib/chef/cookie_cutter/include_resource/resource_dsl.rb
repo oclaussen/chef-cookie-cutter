@@ -69,7 +69,33 @@ class Chef
         def include_resource(name, cookbook: nil)
           cookbook = resource_cookbook_name if cookbook.nil?
           filename = IncludeResource.filename_for_record(run_context, cookbook, :resources, name)
+          internal_before_inclusion = internal?
           include IncludeResource.build_resource_module_from_file(filename)
+          if internal_before_inclusion != internal?
+            show_warning = internal? && cookbook != resource_cookbook_name
+            Chef::Log.warn("Including non-public resource #{name} from #{cookbook}") if show_warning
+            internal internal_before_inclusion
+          end
+        end
+
+        ##
+        # Mark this resource as *internal*, i.e. private to this cookbook.
+        # Internal resources show a warning when included from any other
+        # cookbook.
+        #
+        # @param set_internal [TrueClass, FalseClass] whether the resoure is internal
+        #
+        def internal(set_internal = true)
+          @internal = set_internal
+        end
+
+        ##
+        # Check if the resource has been marked as #internal.
+        #
+        # @return [TrueClass, FalseClass] true iff the resource has been marked as internal
+        #
+        def internal?
+          @internal ||= false
         end
       end
     end

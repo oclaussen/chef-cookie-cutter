@@ -64,6 +64,7 @@ class Chef
             resource_class.run_context = run_context
             raise IOError, "Cannot open or read #{file}!" unless File.exist?(file) && File.readable?(file)
             resource_class.class_eval(IO.read(file), file, 1)
+            next if resource_class.internal?
             resource_class
           end.compact
           @resources

@@ -33,6 +33,7 @@ class Chef
             Chef::Log.warn("No shared properties with name #{name} exist")
             return
           end
+          Chef::Log.warn("Including non-public properties #{name}") if properties.internal?
           properties.eval_on_resource(self)
         end
       end

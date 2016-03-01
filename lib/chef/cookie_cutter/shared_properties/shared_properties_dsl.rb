@@ -70,6 +70,26 @@ class Chef
             blocks[name.to_sym] = blk
           end
         end
+
+        ##
+        # Mark this property set as *internal*, i.e. private to this cookbook.
+        # Internal property sets show a warning when included from any other
+        # cookbook.
+        #
+        # @param set_internal [TrueClass, FalseClass] whether the property set is internal
+        #
+        def internal(set_internal = true)
+          @internal = set_internal
+        end
+
+        ##
+        # Check if the property set have been marked as #internal.
+        #
+        # @return [TrueClass, FalseClass] true iff the property set has been marked as internal
+        #
+        def internal?
+          @internal ||= false
+        end
       end
     end
   end
