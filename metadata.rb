@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # frozen_string_literal: true
 
-$LOAD_PATH.unshift(File.expand_path('../lib', __FILE__))
+$LOAD_PATH.unshift(*Dir[File.expand_path('../files/default/vendor/gems/**/lib', __FILE__)])
 require 'chef/cookie_cutter/version'
 
 name 'cookie-cutter'
