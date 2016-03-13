@@ -60,7 +60,7 @@
 Default actions: [<%= resource.default_action.join ', ' %>]
 
 <% end %>
-<%= table(%w(Action Description), resource.actions.map { |action| [action.to_s, resource.action_descriptions[action]] }) %>
+<%= table(%w(Action Description), resource.action_descriptions.values.reject(&:internal).map { |action| [action.name, action.description] }) %>
 <% end %>
 <% unless resource.properties.empty? %>
 

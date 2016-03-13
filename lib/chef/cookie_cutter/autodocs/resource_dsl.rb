@@ -24,6 +24,21 @@ class Chef
       #
       module ResourceDSL
         ##
+        # Describes an action on the resource
+        #
+        class Action
+          attr_reader :name
+          attr_accessor :description
+          attr_accessor :internal
+
+          def initialize(name, description = '', internal: false)
+            @name = name
+            @description = description
+            @internal = internal
+          end
+        end
+
+        ##
         # Extensions of the Chef resource class DSL
         #
         module ClassMethods
@@ -63,18 +78,35 @@ class Chef
           ##
           # Get the descriptions for actions on the resource.
           #
-          # @return [Hash<Symbol, String>] the description set for the actions
+          # @return [Hash<Symbol, Action>] the description set for the actions
           #
           def action_descriptions
-            @action_descriptions ||= {}
+            @action_descriptions ||= {
+              # Ignore the :nothing action by default
+              nothing: Action.new(:nothing, internal: true)
+            }
+          end
+
+          ##
+          # Describe an action on the resource.
+          #
+          # @param name [Symbol] the action name
+          # @yield [Action] the action description
+          #
+          def describe_action(name, &blk)
+            action_descriptions[name] ||= Action.new(name)
+            action_descriptions[name].instance_eval(&blk) if block_given?
           end
         end
 
         # @!visibility private
         module ClassMethodsMP
-          def action(name, description = '', &blk)
+          def action(name, description = nil, internal: nil, &blk)
             super(name, &blk)
-            action_descriptions[name] = description
+            describe_action(name) do |a|
+              a.description = description unless description.nil?
+              a.internal = internal unless internal.nil?
+            end
           end
 
           def lazy(description = 'a lazy value', &blk)
