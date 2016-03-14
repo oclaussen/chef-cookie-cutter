@@ -64,7 +64,7 @@ Default actions: [<%= resource.default_action.join ', ' %>]
 <% end %>
 <% unless resource.properties.empty? %>
 
-<%= table(%w(Property Description), resource.properties.map { |_, property| [property.name.to_s, property.description] } ) %>
+<%= table(%w(Property Arguments Description Default), resource.properties.map { |_, property| [property.name.to_s, property.describe_arguments, property.description, property.describe_default] } ) %>
 <% end %>
 <% end %>
 <% end %>
