@@ -11,7 +11,7 @@ Style/Documentation:
 Metrics/LineLength:
   Max: 120
 Metrics/MethodLength:
-  Max: 20
+  Enabled: false
 Metrics/ClassLength:
   Enabled: false
 Metrics/ModuleLength:
