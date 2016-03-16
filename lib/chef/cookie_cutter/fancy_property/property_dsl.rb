@@ -46,7 +46,12 @@ class Chef
           elsif options.key?(:coerce_resource)
             raise Chef::Exceptions::CannotValidateStaticallyError unless resource
             value = coerce_resource(resource, options[:coerce_resource], args[0], &blk)
-            value = coerce_proc(resource, options[:coerce], value) if options.key?(:coerce)
+            # We need to initialize empty args and kwargs here, because otherwise
+            # the resource will be transformed into a hash and put on the kwargs
+            # slot. Ruby is weird that way.
+            args = []
+            kwargs = {}
+            value = coerce_proc(resource, options[:coerce], value, *args, **kwargs) if options.key?(:coerce)
             value
           elsif options.key?(:coerce)
             raise Chef::Exceptions::CannotValidateStaticallyError unless resource
