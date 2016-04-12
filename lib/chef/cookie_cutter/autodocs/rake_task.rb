@@ -41,7 +41,7 @@ class Chef
           @output_file = 'README.md'
           @template_file = Pathname.new("#{File.dirname(__FILE__)}/README.md.erb").realpath
 
-          desc 'Generate cookbook documentation' unless ::Rake.application.last_comment
+          desc 'Generate cookbook documentation' unless ::Rake.application.last_description
           task(name) do
             template = File.read(@template_file)
             runner = Autodocs::DocRunner.new(@cookbook_path)
