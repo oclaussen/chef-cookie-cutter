@@ -1,0 +1,13 @@
+[Unit]
+Description=<%= @name %>
+
+[Service]
+ExecStart=<%= @command %>
+ExecReload=/bin/kill -<%= @reload_signal %> $MAINPID
+KillSignal=<%= @stop_signal %>
+User=<%= @user %>
+WorkingDirectory=<%= @directory %>
+Environment=<%= @environment.map {|k, v| "#{k}=#{v}" }.join(' ') %>
+
+[Install]
+WantedBy=multi-user.target

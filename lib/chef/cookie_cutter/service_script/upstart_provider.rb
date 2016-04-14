@@ -16,26 +16,28 @@
 # limitations under the License.
 #
 
-##
-# The top level Chef class.
-#
+require 'mixlib/shellout'
+
 class Chef
-  ##
-  # Cookie Cutter is a collection of hacks and monkey patches for Chef.
-  #
   module CookieCutter
-    require 'chef/cookie_cutter/version'
+    module ServiceScript
+      module UpstartProvider
+        def script_path
+          "/etc/init/#{new_resource.service_name}.conf"
+        end
 
-    require 'chef/cookie_cutter/collect_property'
-    require 'chef/cookie_cutter/fancy_property'
-    require 'chef/cookie_cutter/include_resource'
-    require 'chef/cookie_cutter/ohai_helpers'
-    require 'chef/cookie_cutter/provides_named'
-    require 'chef/cookie_cutter/run_state'
-    require 'chef/cookie_cutter/service_script'
-    require 'chef/cookie_cutter/shared_properties'
+        def template_source
+          'upstart.conf.erb'
+        end
 
-    require 'chef/cookie_cutter/autodocs'
-    require 'chef/cookie_cutter/spec_matchers'
+        def pid
+          cmd = Mixlib::Shellout.new("initctl status #{new_resource.service_name}")
+          return nil if cmd.error?
+          match = cmd.stdout.match(/process (\d+)/)
+          return nil unless match
+          match[1].to_i
+        end
+      end
+    end
   end
 end
