@@ -90,6 +90,19 @@ class Chef
         def docker?
           ::File.exist?('/.dockerinit') || ::File.exist?('/.dockerenv')
         end
+
+        def user_home(user = nil)
+          user = node['current_user'] if user.nil?
+          node['etc']['passwd'][user]['dir']
+        end
+
+        def user_group(user = nil)
+          user = node['current_user'] if user.nil?
+          gid = node['etc']['passwd'][user]['gid']
+          matching_groups = node['etc']['group']
+          matching_groups = matching_groups.select { |_, grp| grp['gid'] == gid }
+          matching_groups.keys[0]
+        end
       end
     end
   end

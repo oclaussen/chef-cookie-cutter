@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-require 'chef/cookie_cutter/user_helpers'
+require 'chef/cookie_cutter/ohai_helpers'
 
 class Chef
   module CookieCutter
@@ -33,7 +33,7 @@ class Chef
 
             property :directory,
                      String,
-                     default: lazy { home_directory(user == 'root' ? nil : user) }
+                     default: lazy { user_home(user == 'root' ? nil : user) }
 
             property :environment,
                      Hash,
