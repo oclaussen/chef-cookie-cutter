@@ -21,7 +21,7 @@ class Chef
     module CollectProperty
       # @!visibility private
       module PropertyDSL
-        def get(resource)
+        def get(resource, nil_set: false)
           if instance_variable_name && collect? && !is_set?(resource)
             []
           else
