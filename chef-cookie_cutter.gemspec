@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.description  = 'A small collection of Chef hacks and workarounds.'
   spec.homepage     = 'https://github.com/oclaussen/chef-cookie-cutter'
 
-  spec.required_ruby_version = '>= 2.0'
+  spec.required_ruby_version = '>= 2.1'
 
   spec.files         = Dir['lib/**/*.{rb,erb}']
   spec.require_paths = ['lib']
@@ -24,5 +24,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rubocop', '~> 0.37'
   spec.add_development_dependency 'rspec', '~> 3.4'
   spec.add_development_dependency 'yard', '~> 0.8'
-  spec.add_development_dependency 'chef', '~> 12.6'
+  spec.add_development_dependency 'chef', '~> 12.9'
 end
