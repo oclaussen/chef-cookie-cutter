@@ -94,6 +94,8 @@ class Chef
         def user_home(user = nil)
           user = node['current_user'] if user.nil?
           node['etc']['passwd'][user]['dir']
+        rescue NoMethodError
+          '/'
         end
 
         def user_group(user = nil)
@@ -102,6 +104,8 @@ class Chef
           matching_groups = node['etc']['group']
           matching_groups = matching_groups.select { |_, grp| grp['gid'] == gid }
           matching_groups.keys[0]
+        rescue NoMethodError
+          'root'
         end
       end
     end
