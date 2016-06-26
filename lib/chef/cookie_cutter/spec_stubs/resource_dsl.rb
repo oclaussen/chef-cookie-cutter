@@ -16,27 +16,30 @@
 # limitations under the License.
 #
 
-##
-# The top level Chef class.
-#
 class Chef
-  ##
-  # Cookie Cutter is a collection of hacks and monkey patches for Chef.
-  #
   module CookieCutter
-    require 'chef/cookie_cutter/version'
+    module SpecStubs
+      ##
+      # Changes to the Chef Resource DSL
+      #
+      module ResourceDSL
+        def only_if(command = nil, opts = {}, &blk)
+          autostub_command(command, opts)
+          super
+        end
 
-    require 'chef/cookie_cutter/collect_property'
-    require 'chef/cookie_cutter/fancy_property'
-    require 'chef/cookie_cutter/include_resource'
-    require 'chef/cookie_cutter/ohai_helpers'
-    require 'chef/cookie_cutter/provides_named'
-    require 'chef/cookie_cutter/run_state'
-    require 'chef/cookie_cutter/service_script'
-    require 'chef/cookie_cutter/shared_properties'
+        def not_if(command = nil, opts = {}, &blk)
+          autostub_command(command, opts)
+          super
+        end
 
-    require 'chef/cookie_cutter/autodocs'
-    require 'chef/cookie_cutter/spec_matchers'
-    require 'chef/cookie_cutter/spec_stubs'
+        def autostub_command(command, opts)
+          return unless defined?(ChefSpec)
+          return if command.nil?
+          return unless opts.key?(:stub_with)
+          ChefSpec::Macros.stub_command(command).and_return(opts[:stub_with])
+        end
+      end
+    end
   end
 end

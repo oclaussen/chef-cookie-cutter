@@ -15,28 +15,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+require 'chef/resource'
 
-##
-# The top level Chef class.
-#
 class Chef
-  ##
-  # Cookie Cutter is a collection of hacks and monkey patches for Chef.
-  #
   module CookieCutter
-    require 'chef/cookie_cutter/version'
+    ##
+    # Extends `not_if` and `only_if` clauses on resources, so they can
+    # automatically stub shell commands for ChefSpec.
+    #
+    # @example File my_cookbook/recipes/test.rb
+    #   file '/some/file' do
+    #     action :create
+    #     content 'Hello World!'
+    #     only_if "cat /some/file | grep -q Hello", stub_with: 0
+    #   end
+    #
+    module SpecStubs
+      require 'chef/cookie_cutter/spec_stubs/resource_dsl'
 
-    require 'chef/cookie_cutter/collect_property'
-    require 'chef/cookie_cutter/fancy_property'
-    require 'chef/cookie_cutter/include_resource'
-    require 'chef/cookie_cutter/ohai_helpers'
-    require 'chef/cookie_cutter/provides_named'
-    require 'chef/cookie_cutter/run_state'
-    require 'chef/cookie_cutter/service_script'
-    require 'chef/cookie_cutter/shared_properties'
-
-    require 'chef/cookie_cutter/autodocs'
-    require 'chef/cookie_cutter/spec_matchers'
-    require 'chef/cookie_cutter/spec_stubs'
+      ::Chef::Resource.send :prepend, SpecStubs::ResourceDSL
+    end
   end
 end
