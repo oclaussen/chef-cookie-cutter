@@ -71,11 +71,11 @@ class Chef
           filename = IncludeResource.filename_for_record(run_context, cookbook, :resources, name)
           internal_before_inclusion = internal?
           include IncludeResource.build_resource_module_from_file(filename)
-          if internal_before_inclusion != internal?
-            show_warning = internal? && cookbook != resource_cookbook_name
-            Chef::Log.warn("Including non-public resource #{name} from #{cookbook}") if show_warning
-            internal internal_before_inclusion
-          end
+
+          return if internal_before_inclusion == internal?
+          show_warning = internal? && cookbook != resource_cookbook_name
+          Chef::Log.warn("Including non-public resource #{name} from #{cookbook}") if show_warning
+          internal internal_before_inclusion
         end
 
         ##

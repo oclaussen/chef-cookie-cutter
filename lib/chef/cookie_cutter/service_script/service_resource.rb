@@ -33,7 +33,7 @@ class Chef
 
             property :directory,
                      String,
-                     default: lazy { user_home(user == 'root' ? nil : user) }
+                     default: lazy { node.user_home(user == 'root' ? nil : user) }
 
             property :environment,
                      Hash,

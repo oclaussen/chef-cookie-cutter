@@ -16,6 +16,8 @@ Metrics/ClassLength:
   Enabled: false
 Metrics/ModuleLength:
   Enabled: false
+Metrics/BlockLength:
+  Enabled: false
 Metrics/AbcSize:
   Enabled: false
 Metrics/CyclomaticComplexity:
