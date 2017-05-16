@@ -77,7 +77,7 @@ under `files/default`, and adding it to the load path in a library file.
 - Author: Ole Claussen (claussen.ole@gmail.com)
 
 ```text
-Copyright 2016 Ole Claussen
+Copyright 2017 Ole Claussen
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
