@@ -33,9 +33,14 @@ class Chef
           @cookbook_path = File.expand_path(cookbook_path)
           Chef::Config.reset!
           Chef::Config[:cache_type] = 'Memory'
+          Chef::Config[:client_key] = nil
+          Chef::Config[:client_name] = nil
+          Chef::Config[:cookbook_path] = File.dirname(@cookbook_path)
+          Chef::Config[:no_lazy_load] = true
           Chef::Config[:node_name] = nil
           Chef::Config[:solo] = true
-          Chef::Config[:cookbook_path] = File.dirname(@cookbook_path)
+          Chef::Config[:solo_legacy_mode] = true
+          Chef::Config[:use_policyfile] = false
         end
 
         def metadata

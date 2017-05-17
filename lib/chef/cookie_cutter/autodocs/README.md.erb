@@ -7,7 +7,7 @@
 
 ## Platform:
 
-<%= list(metadata.platforms) %>
+<%= list(metadata.platforms.map { |platform, version| "#{platform} #{version}" }) %>
 <% end %>
 <% unless metadata.dependencies.empty? && metadata.recommendations.empty? && metadata.suggestions.empty? && metadata.conflicting.empty? %>
 
