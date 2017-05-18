@@ -35,7 +35,7 @@ Just add a dependency to `cookie-cutter` cookbook.
 In your `Berksfile`:
 
 ```ruby
-cookbook 'cookie-cutter', git: 'https://github.com/oclaussen/chef-cookie-cutter.git'
+cookbook 'cookie-cutter', github: 'oclaussen/chef-cookie-cutter.git', rel: 'cookbook'
 ```
 
 And in your `metadata.rb`
