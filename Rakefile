@@ -15,11 +15,5 @@ RuboCop::RakeTask.new(:rubocop)
 RSpec::Core::RakeTask.new(:spec)
 YARD::Rake::YardocTask.new(:doc)
 
-desc 'Install gem into cookbook'
-task install: [:build] do
-  file = File.join('pkg', "chef-cookie_cutter-#{::Chef::CookieCutter::VERSION}.gem")
-  sh "gem install --install-dir files/default/vendor --no-document #{file}"
-end
-
 task test: [:rubocop, :spec]
-task default: [:clean, :test, :build, :install]
+task default: [:clean, :test, :build]
