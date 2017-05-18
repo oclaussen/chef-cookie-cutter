@@ -1,5 +1,6 @@
 # encoding: UTF-8
 # frozen_string_literal: true
+
 #
 # Copyright 2017, Ole Claussen <claussen.ole@gmail.com>
 #
@@ -20,7 +21,7 @@ class Chef
   module CookieCutter
     module OhaiHelpers
       module NodeDSL
-        %w(
+        %w[
           aix
           amazon
           arch
@@ -47,7 +48,7 @@ class Chef
           ubuntu
           windows
           wrlinux
-        ).each do |name|
+        ].each do |name|
           define_method "#{name}?".to_sym do
             [
               node['platform_family'] == name,
@@ -56,7 +57,7 @@ class Chef
           end
         end
 
-        %w(
+        %w[
           azure
           cloud
           cloudstack
@@ -68,19 +69,19 @@ class Chef
           openstack
           rackspace
           vagrant
-        ).each do |name|
+        ].each do |name|
           define_method "#{name}?".to_sym do
             node.key?(name)
           end
         end
 
-        %w(
+        %w[
           kvm
           lxc
           openvz
           vbox
           vmware
-        ).each do |name|
+        ].each do |name|
           define_method "#{name}?".to_sym do
             return false unless node.key?('virtualization')
             node['virtualization']['system'] == name

@@ -1,5 +1,6 @@
 # encoding: UTF-8
 # frozen_string_literal: true
+
 #
 # Copyright 2017, Ole Claussen <claussen.ole@gmail.com>
 #

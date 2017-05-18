@@ -1,5 +1,6 @@
 # encoding: UTF-8
 # frozen_string_literal: true
+
 #
 # Copyright 2017, Ole Claussen <claussen.ole@gmail.com>
 #
@@ -105,7 +106,7 @@ class Chef
         # @!visibility private
         def validation_options
           super.delete_if do |k, _|
-            [:description, :default_description].include? k
+            %i[description default_description].include? k
           end
         end
       end

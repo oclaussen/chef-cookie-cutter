@@ -1,5 +1,6 @@
 # encoding: UTF-8
 # frozen_string_literal: true
+
 #
 # Copyright 2017, Ole Claussen <claussen.ole@gmail.com>
 #
@@ -110,13 +111,13 @@ class Chef
           return unless instance_variable_name
 
           if allow_kwargs?
-            declared_in.class_eval <<-EOM, __FILE__, __LINE__ + 1
+            declared_in.class_eval <<~EOM, __FILE__, __LINE__ + 1
               def #{name}(*args, **kwargs, &blk)
                 self.class.properties[#{name.inspect}].call(self, *args, **kwargs, &blk)
               end
             EOM
           else
-            declared_in.class_eval <<-EOM, __FILE__, __LINE__ + 1
+            declared_in.class_eval <<~EOM, __FILE__, __LINE__ + 1
               def #{name}(value=NOT_PASSED, &blk)
                 self.class.properties[#{name.inspect}].call(self, value, {}, &blk)
               end
@@ -135,7 +136,7 @@ class Chef
         end
 
         def validation_options
-          super.delete_if { |k, _| [:allow_kwargs, :coerce_class, :coerce_resource].include?(k) }
+          super.delete_if { |k, _| %i[allow_kwargs coerce_class coerce_resource].include?(k) }
         end
       end
     end

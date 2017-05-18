@@ -1,5 +1,6 @@
 # encoding: UTF-8
 # frozen_string_literal: true
+
 #
 # Copyright 2017, Ole Claussen <claussen.ole@gmail.com>
 #
@@ -23,10 +24,10 @@ class Chef
       class RunStateDoesNotExistError < StandardError
         def initialize(keys, key)
           hash = keys.map { |k| "['#{k}']" }
-          super <<-EOH
-The run_state does not contain an element at run_state#{hash.join}.
-Specifically, #{key} is not defined.
-EOH
+          super <<~EOH
+            The run_state does not contain an element at run_state#{hash.join}.
+            Specifically, #{key} is not defined.
+          EOH
         end
       end
 
