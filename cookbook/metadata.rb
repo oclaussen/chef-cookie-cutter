@@ -8,8 +8,8 @@ chef_version '~> 12.19'
 
 maintainer 'Ole Claussen'
 maintainer_email 'claussen.ole@gmail.com'
-source_url 'https://github.com/oclaussen/chef-dotfiles'
-issues_url 'https://github.com/oclaussen/chef-dotfiles/issues'
+source_url 'https://github.com/oclaussen/chef-cookie-cutter'
+issues_url 'https://github.com/oclaussen/chef-cookie-cutter/issues'
 license 'Apache-2.0'
 
 supports 'centos'
