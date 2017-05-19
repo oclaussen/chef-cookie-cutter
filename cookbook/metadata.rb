@@ -4,7 +4,7 @@
 name 'cookie-cutter'
 description 'A small collection of Chef hacks and workarounds.'
 version '1.1.0'
-chef_version '~> 12.19'
+chef_version '~> 13'
 
 maintainer 'Ole Claussen'
 maintainer_email 'claussen.ole@gmail.com'
