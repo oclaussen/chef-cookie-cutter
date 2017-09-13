@@ -35,7 +35,7 @@ class Chef
       def filename_for_record(run_context, cookbook_name, segment, name)
         name += '.rb' unless name.end_with?('.rb')
         cookbook_version = run_context.cookbook_collection[cookbook_name]
-        file_vendor = ::Chef::Cookbook::FileVendor.create_from_manifest(cookbook_version.manifest)
+        file_vendor = ::Chef::Cookbook::FileVendor.create_from_manifest(cookbook_version)
         manifest_record = cookbook_version.preferred_manifest_record(run_context.node, segment.to_s, name)
         file_vendor.get_filename(manifest_record[:path])
       end
