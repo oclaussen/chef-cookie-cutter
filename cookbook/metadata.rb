@@ -14,5 +14,3 @@ license 'Apache-2.0'
 
 supports 'centos'
 supports 'debian'
-
-gem 'chef-cookie_cutter', git: 'https://github.com/oclaussen/chef-cookie-cutter.git'
