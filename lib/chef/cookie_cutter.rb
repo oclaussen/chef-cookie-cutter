@@ -26,6 +26,7 @@ class Chef
   module CookieCutter
     require 'chef/cookie_cutter/version'
 
+    require 'chef/cookie_cutter/block_in_file'
     require 'chef/cookie_cutter/collect_property'
     require 'chef/cookie_cutter/fancy_property'
     require 'chef/cookie_cutter/include_resource'
