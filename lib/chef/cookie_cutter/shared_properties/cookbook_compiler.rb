@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # frozen_string_literal: true
 
 #
@@ -16,6 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+# rubocop:disable Lint/RescueWithoutErrorClass
 
 require 'chef/cookie_cutter/shared_properties/shared_properties'
 

@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # frozen_string_literal: true
 
 #
@@ -84,7 +83,7 @@ class Chef
           new_resource = ::Chef::ResourceBuilder.new(
             type: resource_type,
             name: value,
-            created_at: caller[0],
+            created_at: caller(1..1).first,
             params: nil,
             run_context: resource.run_context,
             cookbook_name: resource.cookbook_name,

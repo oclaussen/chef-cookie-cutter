@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # frozen_string_literal: true
 
 $LOAD_PATH.unshift(File.expand_path('../lib', __FILE__))
@@ -20,9 +19,9 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_development_dependency 'bundler', '~> 1.10'
-  spec.add_development_dependency 'rake', '~> 10.5'
-  spec.add_development_dependency 'rubocop', '~> 0.37'
-  spec.add_development_dependency 'rspec', '~> 3.4'
-  spec.add_development_dependency 'yard', '~> 0.8'
   spec.add_development_dependency 'chef', '> 12'
+  spec.add_development_dependency 'rake', '~> 10.5'
+  spec.add_development_dependency 'rspec', '~> 3.4'
+  spec.add_development_dependency 'rubocop', '~> 0.37'
+  spec.add_development_dependency 'yard', '~> 0.8'
 end

@@ -1,9 +1,7 @@
 AllCops:
   DisplayCopNames: true
   DisplayStyleGuide: true
-  TargetRubyVersion: 2.3
-  Exclude:
-    - 'cookbook/files/default/vendor/**/*'
+  TargetRubyVersion: 2.4
 
 Style/Documentation:
   Enabled: false
@@ -23,4 +21,7 @@ Metrics/AbcSize:
 Metrics/CyclomaticComplexity:
   Enabled: false
 Metrics/PerceivedComplexity:
+  Enabled: false
+
+Naming/HeredocDelimiterNaming:
   Enabled: false
