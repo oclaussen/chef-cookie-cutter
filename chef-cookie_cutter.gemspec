@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version      = ::Chef::CookieCutter::VERSION
   spec.author       = 'Ole Claussen'
   spec.email        = 'claussen.ole@gmail.com'
-  spec.license      = 'Apache 2.0'
+  spec.license      = 'Unlicense'
   spec.summary      = 'A small collection of Chef hacks and workarounds.'
   spec.description  = 'A small collection of Chef hacks and workarounds.'
   spec.homepage     = 'https://github.com/oclaussen/chef-cookie-cutter'

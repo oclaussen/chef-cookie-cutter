@@ -9,7 +9,7 @@ maintainer 'Ole Claussen'
 maintainer_email 'claussen.ole@gmail.com'
 source_url 'https://github.com/oclaussen/chef-cookie-cutter'
 issues_url 'https://github.com/oclaussen/chef-cookie-cutter/issues'
-license 'Apache-2.0'
+license 'Unlicense'
 
 supports 'centos'
 supports 'debian'
